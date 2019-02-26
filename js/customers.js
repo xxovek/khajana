@@ -4,7 +4,7 @@ spancountry();
 spanshippingcountry();
 // fetchsinglestate();
 // fetchsinglecity();
-alert("ok");
+
 displayAllCount();
 function displayAllCount(){
   // alert("insideCount");
