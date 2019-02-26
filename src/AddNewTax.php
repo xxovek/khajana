@@ -9,7 +9,7 @@ if($method == "POST")
   $TaxPercent = $_POST['TaxPercent'];
   $sql_insert = "INSERT INTO TaxMaster(companyId,TaxType,TaxPercent) VALUES($companyId,'$TaxType','$TaxPercent')";
   if(mysqli_query($con,$sql_insert)){
-    $response['msg'] = 'New Tax Type '.$TaxType.'has value '.$TaxPercent.' Added';
+    $response['msg'] = 'New Tax Type '.$TaxType.'has value  '.$TaxPercent.' Added';
   }else {
     $response['msg'] = 'Server Error Please Try again';
   }

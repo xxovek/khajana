@@ -137,6 +137,7 @@ if(isset($_SESSION['company_id']))
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="1" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Invoices</a>
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="2" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Purchase</a>
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="5" data-formtype="N" data-transactionid="0"  data-toggle="modal">Purchase Order</a>
+                <a class="dropdown-item" href="#modal-invoice"  data-formid="3" data-formtype="N" data-transactionid="0"  data-toggle="modal">Payment </a>
               </div>
             </div>
           </div>

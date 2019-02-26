@@ -19,7 +19,7 @@ for ($i=0; $i <$length ; $i++) {
         'tname' => $arrJson[$i]['name'],
         'tval'=> $arrJson[$i]['taxpercent'],
         'taxamt'=> $arrJson[$i]['total'],
-        'val'=> ($arrJson[$i]['total'])*(($arrJson[$i]['taxpercent'])/100)
+        'val'=> $arrJson[$i]['total']*(($arrJson[$i]['taxpercent'])/100)
         ]);
   }
   else  {
@@ -30,13 +30,13 @@ for ($i=0; $i <$length ; $i++) {
           'tname' => 'CGST',
           'tval'=> ($arrJson[$i]['taxpercent'])/2,
           'taxamt'=>$arrJson[$i]['total'],
-          'val'=> ($arrJson[$i]['total'])*(($tax1)/100)
+          'val'=> $arrJson[$i]['total']*(($tax1)/100)
           ]);
           array_push($response,[
               'tname' => 'SGST',
               'tval'=>($arrJson[$i]['taxpercent'])/2,
               'taxamt'=>$arrJson[$i]['total'],
-              'val'=> ($arrJson[$i]['total'])*(($tax1)/100)
+              'val'=> $arrJson[$i]['total']*(($tax1)/100)
               ]);
               break;
     }
@@ -56,13 +56,13 @@ for ($i=0; $i <$length ; $i++) {
             'tname' => 'CGST',
             'tval'=> $tax,
             'taxamt'=> $result,
-            'val'=> ($result)*($tax/100)
+            'val'=> $result*($tax/100)
             ]);
             array_push($response,[
                 'tname' => 'SGST',
                 'tval'=> $tax,
                 'taxamt'=> $result,
-                'val'=> ($result)*($tax/100)
+                'val'=>$result*($tax/100)
                 ]);
               }
               else {
@@ -71,13 +71,13 @@ for ($i=0; $i <$length ; $i++) {
                     'tname' => 'CGST',
                     'tval'=> ($arrJson[$i]['taxpercent'])/2,
                     'taxamt'=> $arrJson[$i]['total'],
-                    'val'=> ($arrJson[$i]['total'])*(($tax2)/100)
+                    'val'=>  $arrJson[$i]['total']*(($tax2)/100)
                     ]);
                     array_push($response,[
                         'tname' => 'SGST',
                         'tval'=> ($arrJson[$i]['taxpercent'])/2,
                         'taxamt'=> $arrJson[$i]['total'],
-                        'val'=> ($arrJson[$i]['total'])*(($tax2)/100)
+                        'val'=> $arrJson[$i]['total']*(($tax2)/100)
                         ]);
               }
     }

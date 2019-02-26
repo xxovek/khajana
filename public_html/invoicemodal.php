@@ -142,17 +142,20 @@
                   <th class="text-left" >
             				DESCRIPTION
             			</th>
-                  <th class="text-left" style="width: 10%">
+                  <th class="text-left" style="width: 8%">
                     QTY
                   </th>
-                  <th class="text-left" style="width: 10%">
+                  <th class="text-left" style="width: 8%">
                     RATE
                   </th>
-
-            			<th class="text-center" style="width: 10%">
+                  <th class="text-center" style="width: 8%">
+                    DISCOUNT
+                  </th>
+            			<th class="text-center" style="width: 8%">
             				AMOUNT
             			</th>
-            			<th class="text-center" style="width: 10%">
+
+            			<th class="text-center" style="width: 8%">
             				TAX
             			</th>
             		</tr>

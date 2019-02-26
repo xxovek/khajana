@@ -206,9 +206,9 @@ $('#ItemQuantity').on('keyup',function(){
 $('#asondate').on('blur',function(){
   $('.invalidfeedback2').html('');
 });
-$('#spanunit').on('keyup',function(){
+$('#spanunit').on('change',function(){
   $('.invalidfeedback3').html('');
 });
-$('#spansize').on('keyup',function(){
+$('#spansize').on('change',function(){
   $('.invalidfeedback4').html('');
 });

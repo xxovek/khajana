@@ -12,7 +12,7 @@
 
       <li class="menu-category">Preview</li>
 
-      <li class="menu-item">
+      <li class="menu-item active">
         <a class="menu-link" href="dashboard.php">
           <span class="icon fa fa-home"></span>
           <span class="title">Dashboard</span>
@@ -21,7 +21,7 @@
 
       <li class="menu-item">
         <a class="menu-link" href="#">
-          <span class="icon fa fa-tv"></span>
+          <span class="icon fa fa-money"></span>
           <span class="title">Sales</span>
           <span class="arrow"></span>
         </a>
@@ -46,7 +46,12 @@
               <span class="title">Purchase</span>
             </a>
           </li>
-
+          <li class="menu-item">
+            <a class="menu-link" href="purchaseorder.php">
+              <span class="dot"></span>
+              <span class="title">Purchase Order</span>
+            </a>
+          </li>
           <li class="menu-item">
             <a class="menu-link" href="customers.php">
               <span class="dot"></span>
@@ -59,11 +64,25 @@
               <span class="title">Products And Services</span>
             </a>
           </li>
+
         </ul>
       </li>
 
+<li class="menu-category">Taxes</li>
+<li class="menu-item">
+  <a class="menu-link" href="taxes.php">
+    <span class="icon fa fa-percent"></span>
+    <span class="title">Taxes</span>
+  </a>
+</li>
 
-
+<li class="menu-category">Schemes</li>
+<li class="menu-item">
+  <a class="menu-link" href="schemes.php">
+    <span class="icon pe-7s-note"></span>
+    <span class="title">Schemes</span>
+  </a>
+</li>
       <li class="menu-category">Reports</li>
 
 
@@ -97,98 +116,22 @@
         </ul>
       </li>
 
-
-      <!-- <li class="menu-item">
-        <a class="menu-link" href="#">
-          <span class="icon fa fa-align-left"></span>
-          <span class="title">Content</span>
-          <span class="arrow"></span>
-        </a>
-        <ul class="menu-submenu">
-          <li class="menu-item">
-            <a class="menu-link" href="content/typography.html">
-              <span class="dot"></span>
-              <span class="title">Typography</span>
-            </a>
-          </li>
-
-          <li class="menu-item">
-            <a class="menu-link" href="content/colors.html">
-              <span class="dot"></span>
-              <span class="title">Colors</span>
-            </a>
-          </li>
-        </ul>
-      </li> -->
-
-
-      <!-- <li class="menu-item">
-        <a class="menu-link" href="#">
-          <span class="icon fa fa-plus-circle"></span>
-          <span class="title">Extention</span>
-          <span class="arrow"></span>
-        </a>
-
-        <ul class="menu-submenu">
-          <li class="menu-item">
-            <a class="menu-link" href="extension/ajax-loader.html">
-              <span class="dot"></span>
-              <span class="title">Ajax</span>
-            </a>
-          </li>
-
-        </ul>
-      </li> -->
-
-
-
-
-
-      <!-- <li class="menu-item">
-        <a class="menu-link" href="email/index.html">
-          <span class="icon fa fa-envelope"></span>
-          <span class="title">Emails</span>
-        </a>
-      </li> -->
-
-
-
-      <!-- <li class="menu-divider"></li> -->
-
-      <!-- <li class="menu-item">
-        <a class="menu-link" href="#">
-          <span class="icon fa fa-question-circle"></span>
-          <span class="title">Help</span>
-          <span class="arrow"></span>
-        </a>
-
-        <ul class="menu-submenu">
-          <li class="menu-item">
-            <a class="menu-link" href="help/articles.html">
-              <span class="dot"></span>
-              <span class="title">Articles</span>
-            </a>
-          </li>
-
-          <li class="menu-item">
-            <a class="menu-link" href="help/faq.html">
-              <span class="dot"></span>
-              <span class="title">FAQ</span>
-            </a>
-          </li>
-
-          <li class="menu-item">
-            <a class="menu-link" href="help/changelog.html">
-              <span class="dot"></span>
-              <span class="title">Changelog</span>
-            </a>
-          </li>
-        </ul>
-      </li> -->
-
-
     </ul>
   </nav>
 
 </aside>
 <!-- END Sidebar -->
+
+
+  <script type="text/javascript">
+  $('li').removeClass('active');
+
+    var regex = /[A-Za-z _]+.php/g;
+    var input = location.pathname;
+
+    if(regex.test(input)) {
+       var matches = input.match(regex);
+       $('a[href="'+matches[0]+'"]').closest('li').addClass('menu-item active');
+       $('a[href="'+matches[0]+'"]').closest('ul').closest('li').addClass('menu-item active');
+    }
+  </script>

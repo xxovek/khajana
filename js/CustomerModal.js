@@ -7,6 +7,9 @@ function addcustomerinfo()
     if(formid==5){
        formid=2;
     }
+    if(formid==3){
+       formid=1;
+    }
     // alert(formid);
     if(firstname === ""){
         $('#firstname').focus();
@@ -47,6 +50,9 @@ var formid = $("#hiddenformid").val();
 // alert(formid);
 if(formid==5){
    formid=2;
+}
+if(formid==3){
+   formid=1;
 }
 // alert(formid);
 var customer='';

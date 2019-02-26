@@ -27,6 +27,8 @@ if(isset($_SESSION['company_id']))
         <!-- Favicons -->
         <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
         <link rel="icon" href="../assets/img/favicon.png">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
 
     </head>
 
@@ -151,7 +153,6 @@ if(isset($_SESSION['company_id']))
                 <!-- END Global quickview -->
 
                 <!-- Scripts -->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                 <script src="../assets/js/core.min.js"></script>
                 <script src="../assets/js/app.min.js"></script>
                 <script src="../assets/js/script.min.js"></script>

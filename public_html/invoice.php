@@ -6,7 +6,7 @@
     <meta name="description" content="Responsive admin dashboard and web application ui kit. Stylized tables to allow audience grabs the information in a glance.">
     <meta name="keywords" content="table, toolbar">
 
-    <title>Tables &mdash; TheAdmin</title>
+    <title>Foodkor | Invoices</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">

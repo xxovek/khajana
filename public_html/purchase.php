@@ -136,6 +136,7 @@ if(isset($_SESSION['company_id']))
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="1" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Invoices</a>
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="2" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Purchase</a>
+                <a class="dropdown-item" href="#modal-invoice"  data-formid="5" data-formtype="N" data-transactionid="0"  data-toggle="modal">Purchase Order</a>
               </div>
             </div>
           </div>

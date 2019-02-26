@@ -78,6 +78,7 @@ $t_id=$_REQUEST['tid'];
                   <th class="text-center">Description</th>
                   <th class="text-center">Quantity</th>
                   <th class="text-center">Unit Cost</th>
+                  <th class="text-center">Discount</th>
                   <th class="text-center">Amount</th>
                   <th class="text-center">Tax</th>
 
@@ -222,7 +223,7 @@ $t_id=$_REQUEST['tid'];
           for (var i = 0; i < count; i++) {
             subtotal+=response[i]['total'];
             $("#loadtable").append('<tr class="text-center"><td>'+(i+1)+'</td><td>'+response[i]['iname']+'</td><td>'+response[i]['qty']+
-            '</td><td>'+response[i]['rate']+'</td><td>'+response[i]['total'].toFixed(2)+'</td><td>'+response[i]['tax']+'</td></tr>')
+            '</td><td>'+response[i]['rate']+'</td><td>'+response[i]['discountAmount']+'</td><td>'+response[i]['total'].toFixed(2)+'</td><td>'+response[i]['tax']+'</td></tr>')
           }
           $("#subtotal").html(subtotal.toFixed(2));
           tryied(data,subtotal,response[0]['discount']);

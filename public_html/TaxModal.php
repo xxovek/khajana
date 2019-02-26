@@ -9,11 +9,25 @@
         </button>
       </div>
       <div class="modal-body">
+          <!-- <input type="hidden" id="TaxId"/> -->
+        <div class="form-group">
+            <label class="require" for="TaxName">Tax Name</label>
+          <input type="text" onkeypress="return AlphaBets(event,this.value);" class="form-control form-control-sm" id="TaxName" tabindex="1" name="TaxName" data-placement="left" data-provide="tooltip" title="Enter Tax Name" required autocomplete="off">
+            <div class="invalidTaxName"></div>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+          <textarea name="TaxDescription" class="form-control form-control-sm" rows="2" id="TaxDescription" tabindex="2" autocomplete="off"></textarea>
+        </div>
         <div class="form-group">
             <label for="CategoryName" class="require">Tax Type</label>
           <select data-provide="selectpicker" class="form-control form-control-sm" id="TaxType"  name="TaxType"  title="select Tax Type" required>
             <option value="GST">GST</option>
             <option value="VAT">VAT</option>
+            <option value="Service Tax">Service Tax</option>
+            <option value="Swachh Bharat Cess">Swachh Bharat Cess</option>
+            <option value="Krishi Kalyan Cess">Krishi Kalyan Cess</option>
+            <option value="CST">CST</option>
           </select>
             <div class="invalid-feedback"></div>
         </div>

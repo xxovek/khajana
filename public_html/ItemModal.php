@@ -6,7 +6,8 @@
   </header>
   <div class="quickview-body">
     <div style="padding:5px;">
-      <form data-provide="validation" data-disable="false" id="ItemForm">
+      <form data-provide="validation" class="card" data-disable="false" id="ItemForm">
+<div class="card-body">
       <input type="hidden" id="ItemId"/>
       <input type="hidden" id="ItemDetailId"/>
       <div class="form-group">
@@ -132,8 +133,8 @@
         <textarea name="name" class="form-control form-control-sm" rows="2" id="ItemDescription" tabindex="15" autocomplete="off"></textarea>
       </div>
         <div class="h-40px"></div>
-
-      <footer class="p-12 text-right">
+</div>
+      <footer class="card-footer p-12 text-right">
         <button class="btn btn-flat btn-secondary" type="button" data-toggle="quickview" id="goback">Cancel</button>
         <button class="btn btn-flat btn-primary" type="button" id="formData" onClick="SaveItems();">Save and Close</button>
       </footer>

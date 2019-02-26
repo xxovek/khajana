@@ -17,9 +17,10 @@ if(mysqli_num_rows($result)>0){
         'itemDetailId' => $row['itemDetailId'],
         'qty' => $row['qty'],
         'rate' => $row['rate'],
+
         'TaxType' => $row['TaxType'],
         'TaxPercent' => $row['TaxPercent'],
-        'discountAmount' => $row['discountAmount'],
+        'itemdiscount' => $row['discountAmount'],
         'description' => $row['description'],
         'TransactionId' => $row['TransactionId'],
         'discount' => $row['discount'],

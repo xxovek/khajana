@@ -129,7 +129,7 @@ $note='';
   if($result = mysqli_query($con,$sql)){
     if(mysqli_num_rows($result)>0){
       $row = mysqli_fetch_array($result);
-      $note.='Notes :'.$row['remarks'].'<br>';
+      $note.=$row['remarks'].'<br>';
     }
   }
 
@@ -139,7 +139,7 @@ function fetch_Items(){
   $invoice_number = $_REQUEST['tid'];
   include '../config/connection.php';
 
-  $sql="SELECT IDM.ItemId,concat(IM.ItemName,' ',SM.SizeValue,' ',IM.Unit) as ItemName,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
+  $sql="SELECT IDM.ItemId,IM.ItemName,SM.SizeValue,IM.Unit,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
    FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
   LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
   LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
@@ -152,12 +152,14 @@ $i=0;
     if(mysqli_num_rows($result)>0){
       while($row = mysqli_fetch_array($result))
       {
+        $total=($row['qty']*$row['rate'])-(($row['qty']*$row['rate'])*(($row['discountAmount']/100)));
 $itemtable.=' <tr>
     <td style="width:10%;border:1px solid black;text-align:center;">'.($i+1).'</td>
-    <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].'</td>
+    <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
     <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'. $row['rate'].'</td>
-    <td style="width:20%;border:1px solid black;text-align:center;">'.round($row['qty']*$row['rate'],2).'</td>
+    <td style="width:20%;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
+      <td style="width:20%;border:1px solid black;text-align:center;">'.round($total,2).'</td>
       <td style="width:20%;border:1px solid black;text-align:center;">'.$row['TaxPercent'].'% '.$row['TaxType'].'</td>
 </tr>';
 }
@@ -169,7 +171,7 @@ function subtotal(){
   $invoice_number = $_REQUEST['tid'];
   include '../config/connection.php';
 
-$sql="SELECT IDM.ItemId,IM.ItemName,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
+$sql="SELECT IDM.ItemId,IM.ItemName,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
 FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
 LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
 LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
@@ -183,15 +185,17 @@ $taxcal='';
       while($row = mysqli_fetch_array($result))
       {
         $total=$row['qty']*$row['rate'];
-        $subtotal+=$total;
+        $total1=($total-($total*($row['discountAmount']/100)));
+        $subtotal+=$total1;
         array_push($response,[
             'iname' => $row['ItemName'],
             'qty' => $row['qty'],
             'rate' => $row['rate'],
-            'total' => $row['qty']*$row['rate'],
+            'total' => $total1,
             'tax' => $row['TaxPercent'].'% '.$row['TaxType'],
             'name' =>$row['TaxType'],
             'discount' =>$row['discount'],
+            'discountAmount' =>$row['discountAmount'],
             'taxpercent' =>$row['TaxPercent']
             ]);
     }
@@ -211,8 +215,6 @@ $taxtable='';
 $length=count($arrJson);
 $keyVal   = 'GST';
 $key2=[];
-
-// print_r($arrJson);
 for ($i=0; $i <$length ; $i++) {
   $fl=0;
   $flag=$result1=0;
@@ -223,7 +225,7 @@ for ($i=0; $i <$length ; $i++) {
         'tname' => $arrJson[$i]['name'],
         'tval'=> $arrJson[$i]['taxpercent'],
         'taxamt'=> $arrJson[$i]['total'],
-        'val'=> ($arrJson[$i]['total'])*(($arrJson[$i]['taxpercent'])/100)
+        'val'=> $arrJson[$i]['total']*(($arrJson[$i]['taxpercent'])/100)
         ]);
   }
   else  {
@@ -234,13 +236,13 @@ for ($i=0; $i <$length ; $i++) {
           'tname' => 'CGST',
           'tval'=> ($arrJson[$i]['taxpercent'])/2,
           'taxamt'=>$arrJson[$i]['total'],
-          'val'=> ($arrJson[$i]['total'])*(($tax1)/100)
+          'val'=> $arrJson[$i]['total']*(($tax1)/100)
           ]);
           array_push($response,[
               'tname' => 'SGST',
               'tval'=>($arrJson[$i]['taxpercent'])/2,
               'taxamt'=>$arrJson[$i]['total'],
-              'val'=> ($arrJson[$i]['total'])*(($tax1)/100)
+              'val'=> $arrJson[$i]['total']*(($tax1)/100)
               ]);
               break;
     }
@@ -260,13 +262,13 @@ for ($i=0; $i <$length ; $i++) {
             'tname' => 'CGST',
             'tval'=> $tax,
             'taxamt'=> $result,
-            'val'=> ($result)*($tax/100)
+            'val'=> $result*($tax/100)
             ]);
             array_push($response,[
                 'tname' => 'SGST',
                 'tval'=> $tax,
                 'taxamt'=> $result,
-                'val'=> ($result)*($tax/100)
+                'val'=>$result*($tax/100)
                 ]);
               }
               else {
@@ -275,13 +277,13 @@ for ($i=0; $i <$length ; $i++) {
                     'tname' => 'CGST',
                     'tval'=> ($arrJson[$i]['taxpercent'])/2,
                     'taxamt'=> $arrJson[$i]['total'],
-                    'val'=> ($arrJson[$i]['total'])*(($tax2)/100)
+                    'val'=>  $arrJson[$i]['total']*(($tax2)/100)
                     ]);
                     array_push($response,[
                         'tname' => 'SGST',
                         'tval'=> ($arrJson[$i]['taxpercent'])/2,
                         'taxamt'=> $arrJson[$i]['total'],
-                        'val'=> ($arrJson[$i]['total'])*(($tax2)/100)
+                        'val'=> $arrJson[$i]['total']*(($tax2)/100)
                         ]);
               }
     }
@@ -294,9 +296,9 @@ for ($i=0; $i <$length ; $i++) {
     $total+=$response[$i]['val'];
 
     $taxtable.='<tr>
-        <td  style="width=10%;border-bottom:1px solid black;border-right:1px solid black">
+        <td  style="width=10%;border-bottom:1px solid black;border-right:1px solid black;">
         '.$response[$i]['tname'].' @ '.$response[$i]['tval'].
-        '% on  '.$response[$i]['taxamt'].'
+        '% on  '.round($response[$i]['taxamt'],2).'
         </td>
         <td style="width=10%;border-bottom:1px solid black;" >
       '.round($response[$i]['val'],2).'
@@ -311,7 +313,7 @@ for ($i=0; $i <$length ; $i++) {
        <strong>Sub - Total</strong>
       </td>
       <td style="width=10%;border-bottom:1px solid black;">
-       '.$param1.'
+       '.round($param1,2).'
       </td>
   </tr>
 
@@ -372,22 +374,25 @@ $html='<body style="font-family:verdana;font-size:12px;">
               <strong>Description</strong></td>
               <td style="width:20%;border:1px solid black;text-align:center;"><strong>Quantity</strong></td>
               <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Unit Cost</strong></td>
-              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>
+                <td style="width:20%;border:1px solid black;text-align:center;"><strong>Discount</strong></td>
+                <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>
               <td style="width:20%;color: #000000;border:1px solid black;text-align:center;"><strong>Tax</strong></td>
           </tr>
         '.fetch_Items().'
           </table>
 
-            <table style="float:right;width:50%;border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;">
-          '.subtotal().'
-
-          </table>
 
         </div>
     </div>
     </table>
-	</div>
+    <br>
+    <table style="float:right;width:50%;border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;border-top:1px solid black;">
+  '.subtotal().'
 
+  </table>
+	</div>
+  <h5>Notes</h5>
+  <p class="text-muted" id="notes">'.notes().'</p>
 </body>';
 
 $dompdf->setPaper('A4', 'portrait');

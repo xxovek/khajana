@@ -171,6 +171,8 @@ function savetransactiondetails(param,param1){
         // var hsn = $('#hsn'+value).val();
         var qty = $('#qty'+value).val();
         var rate = $('#rate'+value).val();
+        var itemdiscount = $('#itemdiscount'+value).val();
+
         // var amount = $('#amount'+value).val();
         var tax = $('#tax'+value).val();
         // alert(tax);
@@ -190,6 +192,7 @@ function savetransactiondetails(param,param1){
               desc:desc,
               qty:qty,
               rate:rate,
+              itemdiscount:itemdiscount,
               tax:tax
             },
             success: function(msg) {
@@ -306,9 +309,10 @@ $('#DyanmicTable tbody td:nth-child(1)').each(function () {
       var hsn = $('#hsn'+value).val();
       var qty = $('#qty'+value).val();
       var rate = $('#rate'+value).val();
+      var itemdiscount = $('#itemdiscount'+value).val();
       var amount = $('#amount'+value).val();
       var tax = $('#tax'+value).val();
-      if(itemname==""||qty==""||rate==""||amount==""||tax==""){
+      if(itemname==""||qty==""||rate==""||amount==""||itemdiscount==""||tax==""){
          var param1="Please Check Table Row No"+value;
           j=1;
           app.toast(param1, {

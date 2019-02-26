@@ -14,8 +14,11 @@ displayProducts();
         dataType:'json',
         success:function(response){
             var count = Object.keys(response).length;
+            var lowstkqty = 0,totitemsqty = 0;
             for(var i=0;i<count;i++){
-              if((response[i].ReorderLabel === response[i].Quantity )&&(response[i].ReorderLabel  > response[i].Quantity)   ){
+             lowstkqty = parseInt(response[i].ReorderLabel);
+             totitemsqty = parseInt(response[i].Quantity);
+              if(totitemsqty < lowstkqty || totitemsqty < 1 ){
               $("#tblDatabody").append('<tr><td>'
               +response[i].ItemName+'</td><td>'
               +response[i].SKU+'</td><td>'+response[i].HSN+'</td><td>'
@@ -84,12 +87,16 @@ function displayProducts(){
     dataType:'json',
     success:function(response){
       var count = Object.keys(response).length;
-
+      var lowstkqty = 0,totitemsqty = 0;
       var LowStkQty = 0;
       var OutStkQty = 0;
         if(count > 0){
           for(var i=0;i<count;i++){
-                  if((response[i].ReorderLabel === response[i].Quantity ) && (response[i].ReorderLabel  > response[i].Quantity) ){LowStkQty++;}
+            lowstkqty = parseInt(response[i].ReorderLabel);
+            totitemsqty = parseInt(response[i].Quantity);
+
+                  if(totitemsqty < lowstkqty || totitemsqty < 1 ){LowStkQty++;}
+
               if(response[i].Quantity < 1){OutStkQty ++;}
 
               $('#tblDatabody').append('<tr><td>'+response[i].ItemName+'</td><td>'

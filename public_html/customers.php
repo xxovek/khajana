@@ -28,6 +28,8 @@ if(isset($_SESSION['company_id']))
     <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
     <link rel="icon" href="../assets/img/favicon.png">
     <!-- <link href="../select2/select2.min.css" rel="stylesheet" media="all"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
   </head>
 
   <body class="sidebar-folded">

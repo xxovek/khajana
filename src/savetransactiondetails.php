@@ -14,6 +14,7 @@ $companyId = $_SESSION['company_id'];
 
   $qty = $_REQUEST['qty'];
   $rate = $_REQUEST['rate'];
+  $itemdiscount = $_REQUEST['itemdiscount'];
   $tax = $_REQUEST['tax'];
 
   $sql = "SELECT TaxType,TaxPercent FROM TaxMaster WHERE companyId=$companyId and TaxPercent='$tax'";
@@ -22,8 +23,8 @@ $companyId = $_SESSION['company_id'];
   $TaxType = $row['TaxType'];
   $TaxPercent = $row['TaxPercent'];
 
-  $sql_insert = "INSERT INTO TransactionDetails( TransactionId, itemDetailId, qty, rate, TaxType, TaxPercent,description)
-  VALUES ($transactionId,$itemdetailid,$qty,$rate,'$TaxType','$TaxPercent','$desc')";
+  $sql_insert = "INSERT INTO TransactionDetails( TransactionId, itemDetailId, qty, rate,discountAmount, TaxType, TaxPercent,description)
+  VALUES ($transactionId,$itemdetailid,$qty,$rate,$itemdiscount,'$TaxType','$TaxPercent','$desc')";
   // echo $sql_insert;
   if(mysqli_query($con,$sql_insert)){
       $item_id = mysqli_insert_id($con);

@@ -69,6 +69,8 @@ if(isset($_SESSION['company_id']))
               <a class="nav-link" href="purchaseorder.php">Purchase Order</a>
             <a class="nav-link " href="customers.php">Customers</a>
             <a class="nav-link active" href="#">Products and Services</a>
+            <!-- <a class="nav-link" href="taxes.php">Taxes</a> -->
+
           </nav>
         </div>
       </header>
@@ -127,8 +129,8 @@ if(isset($_SESSION['company_id']))
         </div>
         </div>
 
-      </div><!--/.main-content -->
-</div>
+      </div>
+</div><!--/.main-content -->
 
       <!-- Footer -->
       <footer class="site-footer">
