@@ -1,7 +1,7 @@
 
 function addpayterm(){
   var PaytermValue  = document.getElementById('PaytermValue').value;
-  alert(PaytermValue);
+  // alert(PaytermValue);
   if(PaytermValue === ""){
       $('#PaytermValue').focus();
   }

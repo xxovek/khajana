@@ -102,6 +102,8 @@ function addcustomer(){
   }
 }
 
+
+
 function isNumberInt(event) {
    var charCode = (window.event) ? event.keyCode  : event.which ;
     if (charCode > 31 && (charCode < 48 || charCode > 57))

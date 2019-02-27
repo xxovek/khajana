@@ -11,13 +11,27 @@ $onpurchase=$_REQUEST['onpurchase'];
 $freeqty=$_REQUEST['freeqty'];
 
 $response=[];
-  $sql_insert = "INSERT INTO SchemeMaster(companyId,schemeType,FromDate,UptoDate,ItemDetailId,OnPurchase,freeQty)
-   VALUES($companyId,'$scheme','$from','$upto','$item','$onpurchase','$freeqty')";
-  if(mysqli_query($con,$sql_insert)){
-    $response['msg'] = ' New Scheme Added Successfully';
-  }else {
-    $response['msg'] = 'Server Error Please Try again';
-  }
+if(!empty($_REQUEST['sId']))
+{
+  $sId=$_REQUEST['sId'];
+  $sql_insert = "UPDATE SchemeMaster SET schemeType='$scheme',FromDate='$from',UptoDate='$upto',ItemDetailId='$item',OnPurchase='$onpurchase'
+  ,freeQty='$freeqty'  WHERE SchemeId=$sId";
+   if(mysqli_query($con,$sql_insert)){
+     $response['msg'] = 'Scheme Updated Successfully';
+   }else {
+     $response['msg'] = 'Server Error Please Try again';
+   }
+}
+else {
+    $sql_insert = "INSERT INTO SchemeMaster(companyId,schemeType,FromDate,UptoDate,ItemDetailId,OnPurchase,freeQty)
+     VALUES($companyId,'$scheme','$from','$upto','$item','$onpurchase','$freeqty')";
+     if(mysqli_query($con,$sql_insert)){
+       $response['msg'] = ' New Scheme Added Successfully';
+     }else {
+       $response['msg'] = 'Server Error Please Try again';
+     }
+}
+
 mysqli_close($con);
 exit(json_encode($response));
  ?>

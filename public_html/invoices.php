@@ -137,7 +137,7 @@ if(isset($_SESSION['company_id']))
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="1" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Invoices</a>
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="2" data-formtype="N" data-transactionid="0"  data-toggle="modal">New Purchase</a>
                 <a class="dropdown-item" href="#modal-invoice"  data-formid="5" data-formtype="N" data-transactionid="0"  data-toggle="modal">Purchase Order</a>
-                <a class="dropdown-item" href="#modal-invoice"  data-formid="3" data-formtype="N" data-transactionid="0"  data-toggle="modal">Payment </a>
+                <a class="dropdown-item" href="#modal-payment"  data-formid="3" data-formtype="N" data-transactionid="0"  data-toggle="modal">Payment </a>
               </div>
             </div>
           </div>
@@ -246,7 +246,8 @@ if(isset($_SESSION['company_id']))
       </div>
     </div>
     <!-- END Global quickview -->
-
+    <?php include "paymentmodal.php"; ?>
+    <?php include "paymentmethod.php"; ?>
     <?php include "paytermmodel.php"?>
     <?php include "customermodel.php"?>
     <?php include "taxmodalinvoice.php"?>
@@ -258,7 +259,7 @@ if(isset($_SESSION['company_id']))
     <script src="../js/invoices.js"></script>
 
     <script src="../js/invoice.js"></script>
-
+    <script src="../js/setpaymentmethod.js"></script>
     <script src="../datatables/jquery.dataTables.min.js"></script>
     <script src="../datatables/dataTables.bootstrap4.min.js"></script>
     <script src="../datatables/dataTables.buttons.min.js"></script>
@@ -307,8 +308,48 @@ if(isset($_SESSION['company_id']))
          }
 
       });
-      // getplaceofsupply();
       $('#DyanmicTable').SetEditable({ $addButton: $('#addNewRow')});
+      // Add For Payment Receipt modal
+      $('#modal-payment').on('show.bs.modal', function(e) {
+         var formid = $(e.relatedTarget).data('formid');
+         var formtype = $(e.relatedTarget).data('formtype');
+         var transactionid = $(e.relatedTarget).data('transactionid');
+         // alert(transactionid);
+         //* clearmodalfields();
+         if(transactionid==0){
+           // alert(transactionid);
+           $("#phiddenformid").val(formid);
+           $("#phiddenformtype").val(formtype);
+           $("#phiddentransactionid").val(transactionid);
+           // setcurrentdate();
+             getcustomerpayment();
+              getpaymethodmethod();
+              getdepositeto();
+              DisplayPaymentTblData();
+             // getpayterms();
+             // setcurrentdate();
+         }
+         // else{
+         //    if(typeof(transactionid) === "undefined"){
+         //    }
+         //    else
+         //    {
+         //      $("#hiddenformid").val(formid);
+         //      $("#hiddenformtype").val(formtype);
+         //      $("#hiddentransactionid").val(transactionid);
+         //      // setcurrentdate();
+         //      getcustomer();
+         //      getpayterms();
+         //      setTimeout(function()
+         //      {
+         //      editappenditemtable(transactionid);
+         //      },500);
+         //    }
+         // }
+
+      });
+      // getplaceofsupply();
+
       </script>
 
 </html>

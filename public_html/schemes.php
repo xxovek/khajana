@@ -26,8 +26,8 @@ if(isset($_SESSION['company_id']))
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
     <link rel="icon" href="../assets/img/favicon.png">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <link rel="stylesheet" href="../datatables/CSS/buttons.bootstrap4.min.css" />
+    <link rel="stylesheet" href="../datatables/CSS/dataTables.bootstrap4.min.css" />
   </head>
 
   <body class="sidebar-folded">
@@ -46,9 +46,15 @@ if(isset($_SESSION['company_id']))
     <!-- END Topbar -->
     <!-- Main container -->
     <main>
-
+      <header class="header bg-ui-general">
+        <div class="header-action">
+          <nav class="nav">
+            <a class="nav-link active" href="#" onclick="window.location.reload(true);">Schemes</a>
+          </nav>
+        </div>
+      </header>
       <div class="main-content">
-        <div class="row">
+        <div class="row" id="newschemes" style="display:none">
           <div class="col-sm-2">
 
           </div>
@@ -57,7 +63,7 @@ if(isset($_SESSION['company_id']))
           <div class="card-body">
           <form class="validation" id="schemes">
           <div class="row">
-
+            <input type="hidden" name="sid" id="sid">
           <div class="col-md-6">
           <div class="form-group">
               <label class="require">Item Name</label>
@@ -124,6 +130,35 @@ if(isset($_SESSION['company_id']))
         </div>
         </div>
         </div>
+        <div class="row" id="schemeTable">
+
+            <div class="col-lg-12"><br>
+        <div class="card">
+          <h4 class="card-title"><strong>Schemes</strong>  Information</h4>
+          <div class="card-body table-responsive">
+            <table class="table table-striped table-bordered" cellspacing="0" id="tblData">
+              <thead>
+                <tr>
+                  <th class="text-center">#</th>
+                  <th >Scheme Name</th>
+                  <th >Item Name</th>
+                  <th>From Date</th>
+                  <th >Upto Date</th>
+                  <th>Onpurchase</th>
+                  <th>Free Quantity</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="tblDatabody">
+
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+        </div>
+
+      </div>
       </div><!--/.main-content -->
 
       <!-- Footer -->
@@ -151,6 +186,9 @@ if(isset($_SESSION['company_id']))
       <!-- END Footer -->
 
     </main>
+    <div class="fab fab-fixed">
+      <a class="btn btn-float btn-primary" href="#" title="New Schemes" data-provide="tooltip" onclick="openScheme();"><i class="ti-plus"></i></a>
+    </div>
     <!-- END Main container -->
     <div id="qv-global" class="quickview" data-url="../assets/data/quickview-global.html">
       <div class="spinner-linear">
@@ -162,6 +200,17 @@ if(isset($_SESSION['company_id']))
     <script src="../assets/js/app.min.js"></script>
     <script src="../assets/js/script.min.js"></script>
     <script src="../assets/vendor/moment/moment.min.js"></script>
+
+        <script src="../datatables/jquery.dataTables.min.js"></script>
+        <script src="../datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="../datatables/dataTables.buttons.min.js"></script>
+        <script src="../datatables/buttons.bootstrap4.min.js"></script>
+        <script src="../datatables/jszip.min.js"></script>
+        <script src="../datatables/pdfmake.min.js"></script>
+        <script src="../datatables/vfs_fonts.js"></script>
+        <script src="../datatables/buttons.html5.min.js"></script>
+        <!-- <script src="../datatables/buttons.print.min.js"></script> -->
+        <script src="../datatables/buttons.colVis.min.js"></script>
     <script src="../js/schemes.js"></script>
 
   </body>

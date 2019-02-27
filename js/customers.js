@@ -4,7 +4,6 @@ spancountry();
 spanshippingcountry();
 // fetchsinglestate();
 // fetchsinglecity();
-
 displayAllCount();
 function displayAllCount(){
   // alert("insideCount");
@@ -359,6 +358,49 @@ function displayCustomers() {
 }
 
 
+function displaytransactions(param) {
+  $.ajax({
+      type: "POST",
+      url: "../src/displayTransactions.php",
+      dataType:"json",
+      data:{pid:param},
+      success: function(response) {
+        // alert(response)
+        // var response =JSON.parse(msg);
+        var count= response.length;
+        if(count > 0){
+          for (var i = 0; i < count; i++) {
+            var t_id = response[i].TId;
+            $("#loadtransactions").append('<tr><th scope="row">'+(i + 1)+'</th><td>'
+            +response[i].DateCreated+'</td><td>'
+            +response[i].type+'</td><td>'
+            +response[i].InvoiceNumber+'</td><td>'+response[i].DueDate+'</td><td>'+response[i].Balance+
+            '</td><td>'+response[i].totalbefore+'</td><td>'+response[i].tax+'</td><td>'+response[i].Total+
+            '</td><td>'+response[i].status+'</td><td><button class=" btn-link dropdown-toggle" data-toggle="dropdown">Action</button><div class="dropdown-menu"><a class="dropdown-item" href="invoicePdfView.php?tid='+
+            t_id+'">View</a><a class="dropdown-item" href="invoicePdf.php?tid='+t_id+'">Print</a></div></td></tr>');
+
+        }
+        var countTable = $('thead tr th').length;
+                var arr = [];
+                for(var i=0;i<countTable;i++){
+                  arr.push(i);
+                }
+                $('#example2').DataTable({
+                  bPaginate: $('tbody tr').length>10,
+                  order: [],
+                  // "bInfo": false,
+                  columnDefs: [ { orderable: false, targets: arr } ],
+                  dom: 'Bfrtip',
+                  buttons: ['copy', 'excel', 'pdf','print']
+                });
+        }
+      else{
+
+      }
+
+      }
+  });
+}
 function fetchCustomer(param) {
   fetchsinglebstate();
   fetchsinglebcity();
