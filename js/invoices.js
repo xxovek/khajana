@@ -6,6 +6,7 @@ function DisplayInvoiceTblData(){
             url:"../src/displayInvoice.php",
             type:"POST",
             dataType:"json",
+            data:{Ttype:1},
             success:function(response){
               var count = response.length;
               for (var i = 0; i < count; i++) {
