@@ -3,24 +3,16 @@ include '../config/connection.php';
 session_start();
 $companyId = $_SESSION['company_id'];
 $TransactionType = $_POST['Ttype'];
-// $sql = "SELECT TM.TransactionId,PM.FirstName,PM.lastName,TM.DateCreated, COALESCE(TM.DueDate,'-') as DueDate,CONCAT(TM.FinancialYear,'-',TM.TransactionNumber) as InvoiceNumber,
-// (SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000001))*0.01))) AS TOTAL
-//  FROM TransactionMaster TM INNER JOIN TransactionDetails TD ON TD.TransactionId = TM.TransactionId
-//  LEFT JOIN PersonMaster PM ON PM.PersonId = TM.PersonId
-//  LEFT JOIN TransactionType TT ON TT.TransactionTypeId =TM.TransactionTypeId
-//  where TM.companyId = $companyId AND TM.TransactionTypeId =1
-//  GROUP BY TM.TransactionId,TT.TransactionTypeId";
 
- $sql = "SELECT TM.TransactionId,PM.FirstName,PM.lastName,TM.DateCreated, COALESCE(TM.DueDate,'-') as DueDate,CONCAT(TM.FinancialYear,'-',TM.TransactionNumber) as InvoiceNumber,
- (SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000001))*0.01))) AS TOTAL,TM.TransactionStatus,
+ $sql = "SELECT TM.TransactionId,PM.FirstName,PM.lastName,DATE_FORMAT(TM.DateCreated,'%d %b %Y') AS DateCreated, COALESCE(DATE_FORMAT(TM.DueDate,'%d %b %Y'),'-') as DueDate,CONCAT(TM.FinancialYear,'-',TM.TransactionNumber) as InvoiceNumber,
+ (SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000001))*0.01))) AS TOTAL,COALESCE(TM.TransactionStatus,'-') AS TransactionStatus,
  (CASE WHEN TM.TransactionStatus = 'Open' THEN COALESCE((SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000000000001))*0.01))),0) 
  WHEN TM.TransactionStatus IN('Closed','Paid') THEN 0 WHEN TM.TransactionStatus = 'Partial' THEN TM.RemainingAmount ELSE 0 END) AS Balance
  FROM TransactionMaster TM INNER JOIN TransactionDetails TD ON TD.TransactionId = TM.TransactionId
  LEFT JOIN PersonMaster PM ON PM.PersonId = TM.PersonId
  LEFT JOIN TransactionType TT ON TT.TransactionTypeId =TM.TransactionTypeId
  where TM.companyId = $companyId AND TM.TransactionTypeId =$TransactionType
- GROUP BY TM.TransactionId,TT.TransactionTypeId";
-
+ GROUP BY TM.TransactionId,TT.TransactionTypeId ORDER BY TM.TransactionId DESC";
 
 $response = [];
 if($result = mysqli_query($con,$sql)or die(mysqli_error($con))){

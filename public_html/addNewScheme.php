@@ -25,7 +25,7 @@
                    {
                      while($row=mysqli_fetch_array($result))
                        {?>
-                                                <option value='<?php echo $row[' itemDetailId '];?>'>
+                                                <option value='<?php echo $row['itemDetailId'];?>'>
                                                     <?php echo $row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'];?>
                                                 </option>
                                                 <?php
