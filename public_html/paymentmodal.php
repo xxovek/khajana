@@ -20,19 +20,14 @@
         <div class="row ">
           <div class="col-md-6">
             <div class="row">
-
-
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="input-normal" class="require"><strong>Customer Name</strong></label>
                       <span id="setcustomer1"></span>
                     </div>
                   </div>
-
-
                   <div class="col-md-4">
                     <hr class="d-md-none">
-
                     <div class="form-group">
                       <label><strong>Email Address</strong></label>
                       <div class="input-group">
@@ -42,13 +37,25 @@
                       </div>
                     </div>
                   </div>
-
-
                   <div class="col-md-4">
-
                   </div>
                 </div>
 
+              </div>
+              <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6" style="text-align: right;">
+                  <label><strong style="font-weight: bolder;">AMOUNT RECEIVED</strong></label>
+                  <div class="form-group">
+                    <h2>&#8377; <span id="displayamountreceived"></span></h2>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-6">
                   <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
@@ -68,24 +75,17 @@
                       </div>
                       </div>
                   </div>
-                  <!-- <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="input-normal"><strong>Place Of Supply</strong></label> -->
-                      <!-- <span id="setplacesupply"></span> -->
-                      <!-- <select class="form-control" data-provide="selectpicker" data-live-search="true"  title="Choose Place Of Supply" id="placeofsupply">
-                     <option value="Pune">Pune</option>
-                        <option value="Dhule">Dhule</option>
-                        <option value="Jalgoan">Jalgoan</option>
-                      </select>
-
-                    </div>
-                  </div> -->
-
                 </div>
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-6">
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label for="input-normal" class="require"><strong>Payment Method</strong></label>
+                      <label for="input-normal" ><strong>Payment Method</strong></label>
                       <span id="setpaymentmethod"></span>
                     </div>
                   </div>
@@ -103,39 +103,37 @@
                       <!-- <input type="text" class="form-control" placeholder="Email address" title="Email address" aria-describedby="basic-addon2" id="paymentemailaddress"> -->
                     </div>
                   </div>
-
-
                 </div>
 
 
 
       </div>
-        <div class="col-md-6">
+      <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3" style="text-align: left;">
+          <label><strong >AMOUNT RECEIVED</strong></label>
+          <div class="form-group">
+              <input type="text" class="form-control" id="amtreceivedpayment" onkeypress="return isNumberKey(event);" onchange="checkamountreceivedpay()" />
+          </div>
         </div>
       </div>
-      <!-- <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-      <th class="text-center"> -->
-        <!-- <button id="addNewRow" class="btn btn-primary btn-sm">Add New Row</button> -->
-        <!-- <button id="addNewRow" type="button" title="Add Items" class="btn btn-float btn-sm btn-primary"  data-provide="tooltip" data-placement="left" ><i class="ti-plus"></i></button>
+      </div>
 
-      </th>
       </div>
-      </div>
-      </div> -->
+
       <div class="row">
           <div class="col-md-12">
-            <table class="table  table-bordered table-striped table-hover table-condensed" id="paymentTbl">
+            <table class="table  table-bordered table-striped table-hover table-condensed" id="paymentamountTbl">
             	<thead>
             		<tr>
-            			<th class="text-left" style="width: 5%">
+            			<th class="text-center" style="width: 2%">
             				#
             			</th>
                   <th class="text-left" >
             				DESCRIPTION
             			</th>
-                  
+
                   <th class="text-center" style="width: 10%">
             				DUE DATE
             			</th>
@@ -148,9 +146,9 @@
                   <th class="text-center" style="width: 10%">
                     PAYMENT
                   </th>
-            			<th class="text-center" style="width: 10%">
+            			<!-- <th class="text-center" style="width: 10%">
             				ACTION
-            			</th>
+            			</th> -->
             		</tr>
             	</thead>
             	<tbody id="paymentTblBody">
@@ -163,47 +161,40 @@
         <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                      <label for="textarea"><strong>Message displayed on invoice</strong></label>
-                      <textarea class="form-control" id="remark" rows="4"></textarea>
+                      <label for="textarea"><strong>Memo</strong></label>
+                      <textarea class="form-control" id="memopayment" rows="4"></textarea>
               </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
               <div class="form-group">
               </div>
             </div>
-            <!-- <div class="col-md-3">
+            <div class="col-md-2">
+              <div class="row">
+              <div class="col-md-6">
               <div class="form-group">
-                <table class="table table-responsive" id="GstTable">
-                  <thead>
-                    <tr>
-                      <th ><strong>Subtotal</strong></th>
-                      <th ><strong><span id="subtotal"></span></strong></th>
-                    </tr>
-                  </thead>
-                  <tbody id="gsttaxtable">
-                  </tbody>
-                  <tfoot>
-                    <tr id="hidediscount" style="display:none">
-                      <th><strong>Discount(%)</strong></th>
-                      <th>
-                      <input type="text" class="form-control" value="0.00" placeholder="Discount" id="discount" onchange="setdiscount()" onkeypress="return isNumberKey(event);"></th>
-                    </tr>
-                    <tr>
-                      <th><strong>Total</strong></th>
-                      <th><span id="total"></span></th>
-                    </tr>
-                    <tr>
-                      <th><strong>Final Total</strong></th>
-                      <th><span id="finaltotal"></span></th>
-                    </tr>
-                    <tr>
-                      <th><strong>Balance Due</strong></th>
-                      <th><span id="balancedue"></span></th>
-                    </tr>
-                  </tfoot>
-                </table>
+              <h6><strong>Amount To Apply</strong></h6>
               </div>
-            </div> -->
+            </div>
+            <div class="col-md-6">
+            <div class="form-group">
+              <h6><strong> &#8377; <span id="spanamounttoapply"></span></strong></h6>
+            </div>
+          </div>
+            </div>
+            <div class="row">
+            <div class="col-md-6">
+            <div class="form-group">
+            <h6><strong>Amount To Credit</strong></h6>
+            </div>
+          </div>
+          <div class="col-md-6">
+          <div class="form-group">
+            <h6><strong> &#8377; <span id="spanamounttocredit"></span></strong></h6>
+          </div>
+        </div>
+          </div>
+            </div>
         </div>
       </form>
       </div>
@@ -213,7 +204,7 @@
            close
          </button>
 
-        <button type="button" class="btn btn-label btn-primary" onclick="saveinvoice();">
+        <button type="button" class="btn btn-label btn-primary" onclick="savepaymentinvoice();">
           <label><i class="ti-check"></i></label>
            Submit
         </button>

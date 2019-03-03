@@ -66,6 +66,7 @@ var payterm='';
           payterm+='<option value=""></option>';
           payterm+='</select>';
           $("#setdepositeto").html(payterm);
+          // $("#paymentdepositeto").val(23);
         }
     });
 }
@@ -111,88 +112,245 @@ function addpaymethod(){
     })
   }
 }
+function checkboxtrue(param){
+  var hidepaymentamount = $("#hidepaymentamount"+param+"").val();
+  var amtreceivedpayment= $("#amtreceivedpayment").val();
+  var totsum =parseFloat(amtreceivedpayment)+parseFloat(hidepaymentamount);
+  if(totsum<0){
+    totsum = 0.0;
+  }
+  $("#displayamountreceived").html(totsum.toFixed(2));
+  $("#amtreceivedpayment").val(totsum.toFixed(2));
+  $("#spanamounttoapply").html(totsum.toFixed(2));
+}
+function checkboxfalse(param){
+  var hidepaymentamount = $("#hidepaymentamount"+param+"").val();
+  var amtreceivedpayment= $("#amtreceivedpayment").val();
+  var totsum =parseFloat(amtreceivedpayment)-parseFloat(hidepaymentamount);
+  if(totsum<0){
+    totsum = 0.0;
+  }
+  var i=0,sum=0;
+  var rows = $('#paymentTblBody tr').length;
+  for(i=1;i<=rows;i++){
+    var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
+    if(chechbxtrue){
+            sum = 1;
+      }
+  }
+  // var spanamounttoapply = parseFloat($("#spanamounttoapply").text());
+  //  if(spanamounttoapply===(parseFloat(amtreceivedpayment))){
+  //    $("#spanamounttoapply").html("0.00");
+  //  }else {
+  //
+  //  }
+  if(sum===0){
+      $("#spanamounttoapply").html("0.00");
+  }
+  else{
+      $("#spanamounttoapply").html(totsum.toFixed(2));
+  }
 
-function DisplayPaymentTblData(){
+  $("#displayamountreceived").html(totsum.toFixed(2));
+  $("#amtreceivedpayment").val(totsum.toFixed(2));
+
+}
+function paymentmodal(param){
+
+  var chechbxtrue = $("#paymenttranscheckbox"+param).prop("checked");
+  if(chechbxtrue){
+        $("#paymentamount"+param).attr("readonly", false);
+         checkboxtrue(param);
+        // changepaymentamount(param);
+    }
+    else{
+        checkboxfalse(param);
+        $("#paymentamount"+param).attr("readonly", true);
+          // changepaymentamount(param);
+    }
+}
+function changepaymentamount(param){
+  var hidepaymentamount = $("#hidepaymentamount"+param+"").val();
+  // alert(hidepaymentamount);
+  var paymentamount = $("#paymentamount"+param+"").val();
+
+  if(paymentamount==""){
+    paymentamount=0.00;
+  }
+
+  var amtreceivedpayment= $("#amtreceivedpayment").val();
+  var totsum =parseFloat(amtreceivedpayment)-parseFloat(hidepaymentamount)+parseFloat(paymentamount);
+  $("#displayamountreceived").html(totsum.toFixed(2));
+  $("#amtreceivedpayment").val(totsum.toFixed(2));
+  $("#hidepaymentamount"+param+"").val(paymentamount);
+}
+function checkamountreceivedpay(){
+        var rows = $('#paymentTblBody tr').length;
+        $("#spanamounttocredit").html("0.0");
+        var amtreceivedpayment = $("#amtreceivedpayment").val();
+        if(amtreceivedpayment==""){
+          amtreceivedpayment=0;
+        }
+        $("#displayamountreceived").html(amtreceivedpayment);
+        var i=0;
+        var sum =0;
+        for(i=1;i<=rows;i++){
+          var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
+          if(chechbxtrue){
+                var checkval =$("#paymentamount"+i).val();
+                sum = sum + parseFloat(checkval);
+            }
+        }
+        if(sum > amtreceivedpayment){
+          var param1="Please Enter More Amount";
+            app.toast(param1, {
+             actionTitle: 'warning',
+             // actionUrl: 'something',
+             actionColor: 'warning'
+           });
+            $("#amtreceivedpayment").val();
+        }
+        else {
+             var amountincredit = parseFloat(amtreceivedpayment) -parseFloat(sum);
+             $("#spanamounttocredit").html(amountincredit.toFixed(2));
+        }
+}
+function displayPaymentTblData(){
     $("#paymentTblBody").empty();
-  // var TotalRevenue = 0.00;
-   var  tbl = '';
-    tbl += '<tr>';
-    tbl += '<td>1</td>';
-    tbl += '<td>Invoice # 1014(20/02/2019)</td>';
+    var  tbl = '';
+    $.ajax({
+            url:"../src/displayPaymentReceipt.php",
+            type:"POST",
+            dataType:"json",
+            success:function(response){
+              // alert(response);
+              // var response = JSON.parse(response);
+              var count = response.length;
+              var j =0;
+              var totsum  = 0.00;
+              for (var i = 0; i < count; i++) {
+                 j = i +1;
+                 tbl += '<tr>';
+                 tbl += '<td class="text-center" style="width: 2%"><input type="hidden" id="paymentransactionid'+j+'" value="'+response[i].TId+'"/><input type="checkbox" name="paymentcheckbox" checked id="paymenttranscheckbox'+j+'"  value="'+response[i].TId+'" onclick="paymentmodal('+j+')"/></td>';
+                 tbl += '<td class="text-left">Invoice #'+response[i].InvoiceNumber+'</td>';
 
-    tbl += '<td>DUE DATE</td>';
-    tbl += '<td>ORIGINAL AMOUNT</td>';
-    tbl += '<td>OPEN BALANCE</td>';
-    tbl += '<td>PAYMENT</td>';
-    tbl += '<td>ACTION</td>';
-    tbl += '</tr>';
-    tbl += '<tr>';
-    tbl += '<td>1</td>';
-    tbl += '<td>Invoice # 1014(20/02/2019)</td>';
+                 tbl += '<td class="text-center" style="width: 10%"><span id="paymentduedate'+j+'"></span>'+response[i].DueDate+'</td>';
+                 tbl += '<td class="text-center" style="width: 10%"><span id="paymentoriginalamt'+j+'"></span>'+response[i].Total+'</td>';
+                 tbl += '<td class="text-center" style="width: 10%"><span id="paymentopenbal'+j+'" value="'+response[i].Total+'"></span>'+response[i].Total+'</td>';
+                 tbl += '<td class="text-center" style="width: 10%"><input type="hidden" id="hidepaymentamount'+j+'" value="'+response[i].Total+'"/><input type="text" class="form-control form-control-sm" id="paymentamount'+j+'" style="padding-top: 4px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;text-align: center;font-size:initial;" value="'+response[i].Total+'" onchange="changepaymentamount('+j+')" onkeypress="return isNumberKey(event);" /></td>';
+                 tbl += '</tr>';
+                 totsum = totsum + parseFloat(response[i].Total);
+              }
 
-    tbl += '<td>DUE DATE</td>';
-    tbl += '<td>ORIGINAL AMOUNT</td>';
-    tbl += '<td>OPEN BALANCE</td>';
-    tbl += '<td>PAYMENT</td>';
-    tbl += '<td>ACTION</td>';
-    tbl += '</tr>';
-    tbl += '<tr>';
-    tbl += '<td>1</td>';
-    tbl += '<td>Invoice # 1014(20/02/2019)</td>';
+              $("#amtreceivedpayment").val(totsum);
+              $("#displayamountreceived").html(totsum);
+              $("#spanamounttoapply").html(totsum);
+              $("#spanamounttocredit").html("0.00");
+              $("#paymentTblBody").html(tbl);
+               $('#paymentamountTbl').DataTable({
+                 searching: true,
+                 retrieve: true,
+                 bPaginate: $('tbody tr').length>10,
+                 order: [],
+                 columnDefs: [ { orderable: false, targets: [0,1,2,3,4,5] } ],
+                 dom: 'Bfrtip',
+                 buttons: [],
+                 destroy: true
+               });
 
-    tbl += '<td>DUE DATE</td>';
-    tbl += '<td>ORIGINAL AMOUNT</td>';
-    tbl += '<td>OPEN BALANCE</td>';
-    tbl += '<td>PAYMENT</td>';
-    tbl += '<td>ACTION</td>';
-    tbl += '</tr>';
-    tbl += '<tr>';
-    tbl += '<td>1</td>';
-    tbl += '<td>Invoice # 1014(20/02/2019)</td>';
-
-    tbl += '<td>DUE DATE</td>';
-    tbl += '<td>ORIGINAL AMOUNT</td>';
-    tbl += '<td>OPEN BALANCE</td>';
-    tbl += '<td>PAYMENT</td>';
-    tbl += '<td>ACTION</td>';
-    tbl += '</tr>';
-    // $.ajax({
-    //         url:"../src/displayInvoice.php",
-    //         type:"POST",
-    //         dataType:"json",
-    //         success:function(response){
-    //           var count = response.length;
-    //           for (var i = 0; i < count; i++) {
-    //             $("#paymentTblBody").append('<tr><th scope="row">'+(i + 1)+'</th><td>'
-    //             +response[i].InvoiceNumber+'</td><td>'
-    //             +response[i].name+'</td><td>'
-    //             +response[i].DateCreated+'</td><td>'
-    //             +response[i].DueDate+'</td><td>'
-    //             +response[i].Balance+'</td><td>'
-    //             +response[i].Total+'</td><td>'
-    //             +response[i].status+
-    //             '</td><td><button class=" btn-link dropdown-toggle" type="button" data-toggle="dropdown">Edit</button><div class="dropdown-menu"><a class="dropdown-item" href="#" onclick="PrintInvoice('+response[i].TId+')">Print</a><a class="dropdown-item" href="#modal-invoice"  data-formid="1" data-formtype="U" data-transactionid="'+response[i].TId+'"  data-toggle="modal">Edit</a><a class="dropdown-item" href="#" onclick="EditInvoice('+response[i].TId+')">View</a><a class="dropdown-item" href="#" onclick="DeleteInvoice('+response[i].TId+')">Delete</a></div></td></tr>');
-    //
-    //           }
-    //
-    //
-    //           }
-    //         });
-    alert(tbl);
-     $("#paymentTblBody").html(tbl);
-            $('#paymentTbl').DataTable({
-              searching: true,
-              retrieve: true,
-              bPaginate: $('tbody tr').length>10,
-              order: [],
-              columnDefs: [ { orderable: false, targets: [0,1,2,3,4,5,6] } ],
-              dom: 'Bfrtip',
-
-              destroy: true
+             }
             });
 }
 function clear_paymentmethod()
 {
 $("#paymentmethod").val('');
 
+}
+function savepaymentinvoice(){
+  var customername = $("#customername").val();
+  if(customername===""){
+    var param1="Please Select Customer Name";
+      app.toast(param1, {
+       actionTitle: 'warning',
+       // actionUrl: 'something',
+       actionColor: 'warning'
+     });
+  }
+  else{
+    var amtreceivedpayment = $("#amtreceivedpayment").val();
+    if(parseFloat(amtreceivedpayment)>0){
+      var rows = $('#paymentTblBody tr').length;
+    // alert(rows);
+      var transactionidarray = [];
+      transactionidarray.push(0);
+      $.each($("input[name='paymentcheckbox']:checked"), function(){
+      transactionidarray.push($(this).val());
+      });
+
+     // alert(transactionidarray);
+      var amountpaymentarray = [];
+      amountpaymentarray.push(0);
+      var paymentopenbalarray = [];
+      paymentopenbalarray.push(0);
+      for(i=1;i<=rows;i++){
+        var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
+        if(chechbxtrue){
+              var checkval =$("#paymentamount"+i).val();
+              var paymentopenbal = parseFloat($("#paymentopenbal"+i).val());
+              amountpaymentarray.push(checkval);
+              paymentopenbalarray.push(paymentopenbal);
+          }
+      }
+      // alert(amountpaymentarray);
+      var phiddenformid = $("#phiddenformid").val();
+      var phiddenformtype = $("#phiddenformtype").val();
+      var phiddentransactionid = $("#phiddentransactionid").val();
+      var paymentemailaddress = $("#paymentemailaddress").val();
+      var paymentrcpdate = $("#paymentrcpdate").val();
+      var paymentmethod = $("#paymentmethod").val();
+      var paymentReferenceno = $("#paymentReferenceno").val();
+      var paymentdepositeto = $("#paymentdepositeto").val();
+      var memopayment = $("#memopayment").val();
+      var phidecontactid = $("#phidecontactid").val();
+      var spanamounttoapply = parseFloat($("#spanamounttoapply").text());
+      var spanamounttocredit  = parseFloat($("#spanamounttocredit").text());
+      $.ajax({
+          async: false,
+          type: "POST",
+          url: "../src/savepaymenttransactionmaster.php",
+          data:{
+            formid:phiddenformid,
+            formtype:phiddenformtype,
+            htransactionid:phiddentransactionid,
+            customername:customername,
+            transactionidarray:transactionidarray,
+            amountpaymentarray:amountpaymentarray,
+            paymentopenbalarray:paymentopenbalarray,
+            amtreceivedpayment:amtreceivedpayment,
+            paymentemailaddress:paymentemailaddress,
+            paymentrcpdate:paymentrcpdate,
+            paymentmethod:paymentmethod,
+            paymentReferenceno:paymentReferenceno,
+            paymentdepositeto:paymentdepositeto,
+            phidecontactid:phidecontactid,
+            spanamounttoapply:spanamounttoapply,
+            spanamounttocredit:spanamounttocredit,
+            memopayment:memopayment
+          },
+          success: function(msg) {
+            alert(msg);
+
+          }
+      });
+    }
+    else {
+      var param1="Please Enter Amount Recieved";
+        app.toast(param1, {
+         actionTitle: 'warning',
+         // actionUrl: 'something',
+         actionColor: 'warning'
+       });
+    }
+
+  }
 }

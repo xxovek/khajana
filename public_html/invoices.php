@@ -259,7 +259,7 @@ if(isset($_SESSION['company_id']))
     <script src="../js/invoices.js"></script>
 
     <script src="../js/invoice.js"></script>
-    <script src="../js/setpaymentmethod.js"></script>
+
     <script src="../datatables/jquery.dataTables.min.js"></script>
     <script src="../datatables/dataTables.bootstrap4.min.js"></script>
     <script src="../datatables/dataTables.buttons.min.js"></script>
@@ -271,6 +271,7 @@ if(isset($_SESSION['company_id']))
     <!-- <script src="../datatables/buttons.print.min.js"></script> -->
     <script src="../datatables/buttons.colVis.min.js"></script>
       <script src="../js/invoicetable.min.js"></script>
+        <script src="../js/setpaymentmethod.js"></script>
   </body>
 
       <script>
@@ -322,12 +323,16 @@ if(isset($_SESSION['company_id']))
            $("#phiddenformtype").val(formtype);
            $("#phiddentransactionid").val(transactionid);
            // setcurrentdate();
-             getcustomerpayment();
-              getpaymethodmethod();
               getdepositeto();
-              DisplayPaymentTblData();
-             // getpayterms();
-             // setcurrentdate();
+              getcustomerpayment();
+              getpaymethodmethod();
+
+              displayPaymentTblData();
+              setTimeout(function()
+              {
+                $("#paymentdepositeto").val("23").trigger("change");
+             },500);
+
          }
          // else{
          //    if(typeof(transactionid) === "undefined"){

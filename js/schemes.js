@@ -23,10 +23,10 @@ $("#schemes").on("submit",function(e){
             }
     });
 });
-function openScheme() {
-$("#schemeTable").hide();
-$("#newschemes").show();
-}
+// function openScheme() {
+// $("#schemeTable").hide();
+// $("#newschemes").show();
+// }
 
 function displaySchemes(){
   $('#tblData tbody').empty();
@@ -65,8 +65,9 @@ $.ajax({
 });
 }
 function editSchemes(sId,sName,from,upto,Item,onpurchase,qty){
-$("#schemeTable").hide();
-$("#newschemes").show();
+  $('#newSchemeBtn').click();
+// $("#schemeTable").hide();
+// $("#newschemes").show();
 $("#item").val(Item).trigger('change');
 $("#scheme").val(sName);
 $("#fromDate").val(from);
