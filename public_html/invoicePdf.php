@@ -139,7 +139,7 @@ function fetch_Items(){
   $invoice_number = $_REQUEST['tid'];
   include '../config/connection.php';
 
-  $sql="SELECT IDM.ItemId,IM.ItemName,SM.SizeValue,IM.Unit,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
+  $sql="SELECT IDM.ItemId,IM.ItemName,SM.SizeValue,IM.Unit,TD.rate, TD.itemDetailId,TD.qty,TD.BillQty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
    FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
   LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
   LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
@@ -152,11 +152,12 @@ $i=0;
     if(mysqli_num_rows($result)>0){
       while($row = mysqli_fetch_array($result))
       {
-        $total=($row['qty']*$row['rate'])-(($row['qty']*$row['rate'])*(($row['discountAmount']/100)));
+        $total=($row['BillQty']*$row['rate'])-(($row['BillQty']*$row['rate'])*(($row['discountAmount']/100)));
 $itemtable.=' <tr>
     <td style="width:10%;border:1px solid black;text-align:center;">'.($i+1).'</td>
     <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
+    <td style="width:20%;border:1px solid black;text-align:center;">'.$row['BillQty'].'</td>
     <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'. $row['rate'].'</td>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
       <td style="width:20%;border:1px solid black;text-align:center;">'.round($total,2).'</td>
@@ -171,7 +172,7 @@ function subtotal(){
   $invoice_number = $_REQUEST['tid'];
   include '../config/connection.php';
 
-$sql="SELECT IDM.ItemId,IM.ItemName,TD.rate, TD.itemDetailId,TD.qty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
+$sql="SELECT IDM.ItemId,IM.ItemName,TD.rate, TD.itemDetailId,TD.qty,TD.BillQty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
 FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
 LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
 LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
@@ -184,7 +185,7 @@ $taxcal='';
     if(mysqli_num_rows($result)>0){
       while($row = mysqli_fetch_array($result))
       {
-        $total=$row['qty']*$row['rate'];
+        $total=$row['BillQty']*$row['rate'];
         $total1=($total-($total*($row['discountAmount']/100)));
         $subtotal+=$total1;
         array_push($response,[
@@ -369,10 +370,11 @@ $html='<body style="font-family:verdana;font-size:12px;">
 
         <table cellspacing="0" cellpadding="0" width="100%">
           <tr style="background:#fff;">
-              <td style="width:10%;border:1px solid black;text-align:center;"><strong>SR No.</strong></td>
+              <td style="width:10%;border:1px solid black;text-align:center;"><strong>Sr No.</strong></td>
               <td style="width:40%;border-bottom:1px solid black;border-top:1px solid black;text-align:left; padding-left:10px;">
               <strong>Description</strong></td>
-              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Quantity</strong></td>
+              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Shipping Quantity</strong></td>
+              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Billing Quantity</strong></td>
               <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Unit Cost</strong></td>
                 <td style="width:20%;border:1px solid black;text-align:center;"><strong>Discount</strong></td>
                 <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>

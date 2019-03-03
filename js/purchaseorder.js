@@ -3,9 +3,10 @@ function DisplayInvoiceTblData(){
     $("#purchaseorderTblBody").empty();
   var TotalRevenue = 0;
     $.ajax({
-            url:"../src/displayPurchaseOrder.php",
+            url:"../src/displayInvoice.php",
             type:"POST",
             dataType:"json",
+            data:{Ttype:5},
             success:function(response){
               var count = response.length;
               for (var i = 0; i < count; i++) {

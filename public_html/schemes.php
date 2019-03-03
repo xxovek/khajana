@@ -13,7 +13,7 @@ if(isset($_SESSION['company_id']))
     <meta name="description" content="Responsive admin dashboard and web application ui kit. Stylized tables to allow audience grabs the information in a glance.">
     <meta name="keywords" content="table, toolbar">
 
-    <title>Reports | Stock Ledger Report</title>
+    <title>Schems | Information</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
@@ -28,6 +28,7 @@ if(isset($_SESSION['company_id']))
     <link rel="icon" href="../assets/img/favicon.png">
     <link rel="stylesheet" href="../datatables/CSS/buttons.bootstrap4.min.css" />
     <link rel="stylesheet" href="../datatables/CSS/dataTables.bootstrap4.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
 
   <body class="sidebar-folded">
@@ -49,7 +50,7 @@ if(isset($_SESSION['company_id']))
       <header class="header bg-ui-general">
         <div class="header-action">
           <nav class="nav">
-            <a class="nav-link active" href="#" onclick="window.location.reload(true);">Schemes</a>
+            <a class="nav-link" href="#" onclick="window.location.reload(true);">Schemes</a>
           </nav>
         </div>
       </header>
@@ -66,7 +67,7 @@ if(isset($_SESSION['company_id']))
                 <tr>
                   <th class="text-center">#</th>
                   <th >Scheme Name</th>
-                  <th >Item Name</th>
+                  <th >Product/Service Name</th>
                   <th>From Date</th>
                   <th >Upto Date</th>
                   <th>Onpurchase</th>
@@ -112,7 +113,7 @@ if(isset($_SESSION['company_id']))
 
     </main>
     <div class="fab fab-fixed">
-      <a class="btn btn-float btn-primary" href="#qv-Taxes-addDiv" title="New Tax" data-provide="tooltip" data-toggle="quickview" id="newSchemeBtn"><i class="ti-plus"></i></a>
+      <a class="btn btn-float btn-primary" href="#qv-Taxes-addDiv" title="New Scheme" data-provide="tooltip" data-toggle="quickview" id="newSchemeBtn"><i class="ti-plus"></i></a>
     </div>
 
     <!-- Global quickview -->

@@ -70,17 +70,6 @@
   </div>
   </div>
 </div>
-<!-- <div class="row">
-  <div class="col-sm-6">
-  <label class="require" for="asondate" data-provide="tooltip" data-placement="right" title="In the As of date field, enter the date you start to track the inventory item’s quantity on hand.">As of Date</label>
-  </div>
-  <div class="col-sm-6">
-  <div class="form-group">
-    <input type="text" class="form-control form-control-sm" title="As Of date" required tabindex="9" data-provide="datepicker" id="asondate" autocomplete="off">
-  <div class="invalidfeedback2"></div>
-  </div>
-  </div>
-</div> -->
 <div class="row">
 <div class="col-sm-6">
   <h6 title="Select The Category" data-provide="tooltip">Category</h6>
