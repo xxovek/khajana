@@ -185,35 +185,45 @@ function changepaymentamount(param){
   $("#hidepaymentamount"+param+"").val(paymentamount);
 }
 function checkamountreceivedpay(){
-        var rows = $('#paymentTblBody tr').length;
-        $("#spanamounttocredit").html("0.0");
+        // var rows = $('#paymentTblBody tr').length;
+        $("#spanamounttocredit").html("0.00");
         var amtreceivedpayment = $("#amtreceivedpayment").val();
+        // alert(amtreceivedpayment);
         if(amtreceivedpayment==""){
           amtreceivedpayment=0;
         }
         $("#displayamountreceived").html(amtreceivedpayment);
-        var i=0;
-        var sum =0;
-        for(i=1;i<=rows;i++){
-          var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
-          if(chechbxtrue){
-                var checkval =$("#paymentamount"+i).val();
-                sum = sum + parseFloat(checkval);
-            }
-        }
-        if(sum > amtreceivedpayment){
-          var param1="Please Enter More Amount";
-            app.toast(param1, {
-             actionTitle: 'warning',
-             // actionUrl: 'something',
-             actionColor: 'warning'
-           });
-            $("#amtreceivedpayment").val();
+        var spanamounttoapply= parseFloat($("#spanamounttoapply").text());
+        // alert(spanamounttoapply);
+        if(parseFloat(amtreceivedpayment)>spanamounttoapply){
+          var amountincredit = parseFloat(amtreceivedpayment)-spanamounttoapply;
+          $("#spanamounttocredit").html(amountincredit.toFixed(2));
         }
         else {
-             var amountincredit = parseFloat(amtreceivedpayment) -parseFloat(sum);
-             $("#spanamounttocredit").html(amountincredit.toFixed(2));
+           $("#spanamounttocredit").html("0.00");
         }
+        // var i=0;
+        // var sum =0;
+        // for(i=1;i<=rows;i++){
+        //   var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
+        //   if(chechbxtrue){
+        //         var checkval =$("#paymentamount"+i).val();
+        //         sum = sum + parseFloat(checkval);
+        //     }
+        // }
+        // if(sum > amtreceivedpayment){
+        //   var param1="Please Enter More Amount";
+        //     app.toast(param1, {
+        //      actionTitle: 'warning',
+        //      // actionUrl: 'something',
+        //      actionColor: 'warning'
+        //    });
+        //     $("#amtreceivedpayment").val();
+        // }
+        // else {
+             // var amountincredit = parseFloat(amtreceivedpayment);
+             // $("#spanamounttocredit").html(amountincredit.toFixed(2));
+        // }
 }
 function displayPaymentTblData(){
     $("#paymentTblBody").empty();
@@ -223,7 +233,7 @@ function displayPaymentTblData(){
             type:"POST",
             dataType:"json",
             success:function(response){
-              // alert(response);
+             // alert(response);
               // var response = JSON.parse(response);
               var count = response.length;
               var j =0;
@@ -231,15 +241,16 @@ function displayPaymentTblData(){
               for (var i = 0; i < count; i++) {
                  j = i +1;
                  tbl += '<tr>';
-                 tbl += '<td class="text-center" style="width: 2%"><input type="hidden" id="paymentransactionid'+j+'" value="'+response[i].TId+'"/><input type="checkbox" name="paymentcheckbox" checked id="paymenttranscheckbox'+j+'"  value="'+response[i].TId+'" onclick="paymentmodal('+j+')"/></td>';
+                 // <input type="checkbox" name="paymentcheckbox" checked id="paymenttranscheckbox'+j+'"  value="'+response[i].TId+'" onclick="paymentmodal('+j+')"/>
+                 tbl += '<td class="text-center" style="width: 2%"><input type="hidden" id="paymentransactionid'+j+'" value="'+response[i].TId+'"/>'+j+'</td>';
                  tbl += '<td class="text-left">Invoice #'+response[i].InvoiceNumber+'</td>';
 
                  tbl += '<td class="text-center" style="width: 10%"><span id="paymentduedate'+j+'"></span>'+response[i].DueDate+'</td>';
                  tbl += '<td class="text-center" style="width: 10%"><span id="paymentoriginalamt'+j+'"></span>'+response[i].Total+'</td>';
-                 tbl += '<td class="text-center" style="width: 10%"><span id="paymentopenbal'+j+'" value="'+response[i].Total+'"></span>'+response[i].Total+'</td>';
-                 tbl += '<td class="text-center" style="width: 10%"><input type="hidden" id="hidepaymentamount'+j+'" value="'+response[i].Total+'"/><input type="text" class="form-control form-control-sm" id="paymentamount'+j+'" style="padding-top: 4px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;text-align: center;font-size:initial;" value="'+response[i].Total+'" onchange="changepaymentamount('+j+')" onkeypress="return isNumberKey(event);" /></td>';
+                 tbl += '<td class="text-center" style="width: 10%"><input type="hidden" id="paymentopenbal'+j+'" value="'+response[i].RemainingAmount+'"/>'+response[i].RemainingAmount+'</td>';
+                 tbl += '<td class="text-center" style="width: 10%"><input type="hidden" id="hidepaymentamount'+j+'" value="'+response[i].RemainingAmount+'"/><input type="text" class="form-control form-control-sm" id="paymentamount'+j+'" style="padding-top: 4px;padding-bottom: 3px;padding-right: 0px;padding-left: 0px;text-align: center;font-size:initial;" value="'+response[i].RemainingAmount+'" onchange="changepaymentamount('+j+')" onkeypress="return isNumberKey(event);" readonly/></td>';
                  tbl += '</tr>';
-                 totsum = totsum + parseFloat(response[i].Total);
+                 totsum = totsum + parseFloat(response[i].RemainingAmount);
               }
 
               $("#amtreceivedpayment").val(totsum);
@@ -281,25 +292,30 @@ function savepaymentinvoice(){
     if(parseFloat(amtreceivedpayment)>0){
       var rows = $('#paymentTblBody tr').length;
     // alert(rows);
-      var transactionidarray = [];
-      transactionidarray.push(0);
-      $.each($("input[name='paymentcheckbox']:checked"), function(){
-      transactionidarray.push($(this).val());
-      });
+
+      // $.each($("input[name='paymentcheckbox']:checked"), function(){
+      // transactionidarray.push($(this).val());
+      // });
 
      // alert(transactionidarray);
+      var transactionidarray = [];
+      transactionidarray.push(0);
       var amountpaymentarray = [];
       amountpaymentarray.push(0);
       var paymentopenbalarray = [];
       paymentopenbalarray.push(0);
       for(i=1;i<=rows;i++){
-        var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
-        if(chechbxtrue){
+        // var chechbxtrue = $("#paymenttranscheckbox"+i).prop("checked");
+        // if(chechbxtrue){
+
+              var paymentransactionid =$("#paymentransactionid"+i).val();
               var checkval =$("#paymentamount"+i).val();
               var paymentopenbal = parseFloat($("#paymentopenbal"+i).val());
+              // alert(paymentopenbal);
               amountpaymentarray.push(checkval);
               paymentopenbalarray.push(paymentopenbal);
-          }
+              transactionidarray.push(paymentransactionid);
+          // }
       }
       // alert(amountpaymentarray);
       var phiddenformid = $("#phiddenformid").val();
@@ -308,6 +324,9 @@ function savepaymentinvoice(){
       var paymentemailaddress = $("#paymentemailaddress").val();
       var paymentrcpdate = $("#paymentrcpdate").val();
       var paymentmethod = $("#paymentmethod").val();
+      if(paymentmethod==""){
+        paymentmethod = 0;
+      }
       var paymentReferenceno = $("#paymentReferenceno").val();
       var paymentdepositeto = $("#paymentdepositeto").val();
       var memopayment = $("#memopayment").val();
@@ -338,8 +357,19 @@ function savepaymentinvoice(){
             memopayment:memopayment
           },
           success: function(msg) {
-            alert(msg);
+          // alert(msg);
+            var response = JSON.parse(msg);
 
+            if(response['msg']){
+              // alert(response['msg']);
+              var param1="Payment Receipt "+response['ItemDetailId']+" Generated successfully";
+              app.toast(param1, {
+                actionTitle: 'Success',
+                // actionUrl: 'something',
+                actionColor: 'success'
+              });
+                $("#modal-payment .close").click();
+            }
           }
       });
     }

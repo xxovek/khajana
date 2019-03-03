@@ -13,6 +13,7 @@ session_start();
   if($contactId==0){
     $contactId="NULL";
   }
+  $finaltotal=$_REQUEST['finaltotal'];
     // echo $contactId;
   // $contactId = !empty($contactId) ? "'$contactId'" : "NULL";
   $discount = $_REQUEST['discount'];
@@ -97,8 +98,8 @@ session_start();
   }
   // echo $TransactionNumber;
   $sql_insert = "INSERT INTO TransactionMaster(companyId, PersonId, contactId, TransactionTypeId, FinancialYear,
-    TransactionNumber, discount, DateCreated, DueDate, PaytermsId, remarks) VALUES
-  ($companyId,$personId,$contactId,'$formid','$financialyear','$TransactionNumber','$discount','$datecreated','$duedate',$PaytermsId,'$remark')";
+    TransactionNumber, discount, DateCreated, DueDate, PaytermsId, remarks,TransactionStatus,RemainingAmount) VALUES
+  ($companyId,$personId,$contactId,'$formid','$financialyear','$TransactionNumber','$discount','$datecreated','$duedate',$PaytermsId,'$remark','Open','$finaltotal')";
    // echo $sql_insert;
   if(mysqli_query($con,$sql_insert)){
     $item_id = mysqli_insert_id($con);

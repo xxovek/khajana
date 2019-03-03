@@ -330,6 +330,7 @@ if(isset($_SESSION['company_id']))
               displayPaymentTblData();
               setTimeout(function()
               {
+                $("#paymentmethod").val("1").trigger("change");
                 $("#paymentdepositeto").val("23").trigger("change");
              },500);
 

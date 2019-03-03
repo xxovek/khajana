@@ -13,7 +13,7 @@ function addcustomer1(){
           custid:parseInt(customername)
         },
         success: function(msg) {
-
+           alert(msg);
            var response = JSON.parse(msg);
            $("#hidecontactid").val(response['contactId']);
            $("#billingaddress").val(response['contactAddress']);
@@ -244,7 +244,7 @@ function transactionmaster(){
   var  remark = $("#remark").val();
   var  discount = $("#discount").val();
   var contactid= $("#hidecontactid").val();
-
+  var finaltotal = parseFloat($("#finaltotal").text());
   if(contactid===""){
     contactid=0;
   }
@@ -262,6 +262,7 @@ function transactionmaster(){
         datecreated:invoicedate,
         duedate:duedate,
         paytermval:terms,
+        finaltotal:finaltotal,
         remark:remark
       },
       success: function(msg) {

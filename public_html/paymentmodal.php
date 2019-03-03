@@ -85,7 +85,7 @@
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label for="input-normal" ><strong>Payment Method</strong></label>
+                      <label for="input-normal" class="require" ><strong>Payment Method</strong></label>
                       <span id="setpaymentmethod"></span>
                     </div>
                   </div>
@@ -97,7 +97,7 @@
                   </div>
 
                   <div class="col-md-4">
-                    <div class="form-group">
+                    <div class="form-group" class="require">
                       <label><strong>Deposit to</strong></label>
                       <span id="setdepositeto"></span>
                       <!-- <input type="text" class="form-control" placeholder="Email address" title="Email address" aria-describedby="basic-addon2" id="paymentemailaddress"> -->
@@ -128,7 +128,7 @@
             	<thead>
             		<tr>
             			<th class="text-center" style="width: 2%">
-            				#
+            			 NO
             			</th>
                   <th class="text-left" >
             				DESCRIPTION
