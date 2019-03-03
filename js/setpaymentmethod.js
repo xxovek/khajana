@@ -225,7 +225,7 @@ function checkamountreceivedpay(){
              // $("#spanamounttocredit").html(amountincredit.toFixed(2));
         // }
 }
-function displayPaymentTblData(){
+function displayPaymentTblData(param){
     $("#paymentTblBody").empty();
     var  tbl = '';
     $.ajax({
