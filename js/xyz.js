@@ -1,0 +1,3 @@
+function pqr(){
+    alert('ok');
+}
