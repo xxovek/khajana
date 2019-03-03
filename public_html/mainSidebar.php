@@ -83,6 +83,13 @@
     <span class="title">Schemes</span>
   </a>
 </li>
+<li class="menu-category">Account Chart</li>
+<li class="menu-item">
+  <a class="menu-link" href="accounting.php">
+    <span class="icon pe-7s-note"></span>
+    <span class="title">Account Chart</span>
+  </a>
+</li>
       <li class="menu-category">Reports</li>
 
 
