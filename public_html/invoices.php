@@ -327,7 +327,7 @@ if(isset($_SESSION['company_id']))
               getcustomerpayment();
               getpaymethodmethod();
 
-              displayPaymentTblData();
+              // displayPaymentTblData();
               setTimeout(function()
               {
                 $("#paymentmethod").val("1").trigger("change");

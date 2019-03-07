@@ -2,11 +2,12 @@
 include '../config/connection.php';
 session_start();
 $companyId = $_SESSION['company_id'];
+$customerid = $_REQUEST['custid'];
 $sql = "SELECT TM.TransactionId,PM.FirstName,PM.lastName,TM.DateCreated, COALESCE(TM.DueDate,'-') as DueDate,
 CONCAT(TM.FinancialYear,'-',TM.TransactionNumber) as InvoiceNumber,SUM(COALESCE(TM.AmountRecieved,0)+TM.RemainingAmount) as TOTAL,TM.RemainingAmount as RemainingAmount
  FROM TransactionMaster TM LEFT JOIN PersonMaster PM ON PM.PersonId = TM.PersonId
 
- where TM.companyId =$companyId AND TM.TransactionTypeId =1 AND TM.TransactionStatus IN ('Open','Partial') AND TM.PersonId =62
+ where TM.companyId =$companyId AND TM.TransactionTypeId =1 AND TM.TransactionStatus IN ('Open','Partial') AND TM.PersonId =$customerid
  GROUP BY TM.TransactionId";
 
 $bal = 0;

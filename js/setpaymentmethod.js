@@ -5,6 +5,7 @@ function addcustomerpayterm1(){
 
   }
   else{
+     displayPaymentTblData(customername);
     $.ajax({
         type: "POST",
         url: "../src/fetchaddressinfobyid.php",
@@ -16,6 +17,7 @@ function addcustomerpayterm1(){
            var response = JSON.parse(msg);
            $("#phidecontactid").val(response['contactId']);
            $("#pbillingaddress").val(response['contactAddress']);
+
         }
     });
   }
@@ -232,6 +234,8 @@ function displayPaymentTblData(param){
             url:"../src/displayPaymentReceipt.php",
             type:"POST",
             dataType:"json",
+            data:{custid:parseInt(param)},
+
             success:function(response){
              // alert(response);
               // var response = JSON.parse(response);
@@ -258,6 +262,11 @@ function displayPaymentTblData(param){
               $("#spanamounttoapply").html(totsum);
               $("#spanamounttocredit").html("0.00");
               $("#paymentTblBody").html(tbl);
+              if ($.fn.DataTable.isDataTable("#paymentamountTbl") && count==0) {
+              
+                $('#paymentamountTbl').DataTable().clear().destroy();
+                }
+
                $('#paymentamountTbl').DataTable({
                  searching: true,
                  retrieve: true,

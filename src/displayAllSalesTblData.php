@@ -5,13 +5,15 @@ $companyId = $_SESSION['company_id'];
 
 $sql = "SELECT TM.TransactionId as Tid,COALESCE(DATE_FORMAT(TM.DateCreated,'%d %b %Y'),'-') as InvDate,CONCAT(TM.FinancialYear,'-',TM.TransactionNumber) as InvoiceNumber,
 TT.TransactionType,TM.TransactionNumber as TransactionNumber,TM.TransactionTypeId,CONCAT(PM.FirstName,' ',PM.lastName) as personName, COALESCE(DATE_FORMAT(TM.DueDate,'%d %b %Y'),'-') as dueDate,
-COALESCE(SUM(TD.qty*TD.rate),0) AS TotalBeforeTax,COALESCE((SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0))*0.01)),0) AS Tax, COALESCE((SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000000000001))*0.01))),0) AS Total,COALESCE(TM.TransactionStatus,'-') AS TransactionStatus,
-(CASE WHEN TM.TransactionStatus = 'Open' THEN COALESCE((SUM(TD.qty*TD.rate)+(SUM(TD.qty*TD.rate*(IFNULL(TD.TaxPercent,0.00000000000001))*0.01))),0) 
+COALESCE(SUM(TD.BillQty*TD.rate),0) AS TotalBeforeTax,COALESCE((SUM(TD.BillQty*TD.rate*(IFNULL(TD.TaxPercent,0))*0.01)),0) AS Tax,
+(CASE WHEN TM.TransactionTypeId = 3 THEN TM.AmountRecieved ELSE
+COALESCE((SUM(TD.BillQty*TD.rate)+(SUM(TD.BillQty*TD.rate*(IFNULL(TD.TaxPercent,0.00000000000001))*0.01))),0) END) AS Total,COALESCE(TM.TransactionStatus,'-') AS TransactionStatus,
+(CASE WHEN TM.TransactionStatus = 'Open' THEN COALESCE((SUM(TD.BillQty*TD.rate)+(SUM(TD.BillQty*TD.rate*(IFNULL(TD.TaxPercent,0.00000000000001))*0.01))),0)
  WHEN TM.TransactionStatus IN('Closed','Paid') THEN 0 WHEN TM.TransactionStatus = 'Partial' THEN TM.RemainingAmount  WHEN TM.TransactionStatus = 'Unapplied' THEN TM.AmountRecieved ELSE 0 END) AS Balance
-FROM TransactionMaster TM INNER JOIN TransactionDetails TD ON TD.TransactionId = TM.TransactionId
+FROM TransactionMaster TM LEFT JOIN TransactionDetails TD ON TD.TransactionId = TM.TransactionId
 LEFT JOIN PersonMaster PM ON PM.PersonId = TM.PersonId
 LEFT JOIN TransactionType TT ON TT.TransactionTypeId = TM.TransactionTypeId
-WHERE TM.companyId = $companyId GROUP BY TM.TransactionId,TT.TransactionTypeId ORDER BY TM.TransactionId DESC";
+WHERE TM.companyId = 4 GROUP BY TM.TransactionId,TT.TransactionTypeId ORDER BY TM.TransactionId DESC";
 
 $response = [];
 if($result = mysqli_query($con,$sql)or die(mysqli_error($con))){

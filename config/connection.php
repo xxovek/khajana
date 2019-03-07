@@ -2,6 +2,6 @@
 $servername = 'localhost';
 $username   = 'root';
 $password   = '';
-$dbname ='Khajana3';
+$dbname ='khajana26';
 $con = new mysqli($servername,$username,$password,$dbname) or die(mysqli_error());
 ?>

@@ -13,10 +13,11 @@ function addcustomer1(){
           custid:parseInt(customername)
         },
         success: function(msg) {
-           alert(msg);
+           // alert(msg);
            var response = JSON.parse(msg);
            $("#hidecontactid").val(response['contactId']);
            $("#billingaddress").val(response['contactAddress']);
+           $("#remainamount").val(response['RemainingAmount']);
         }
     });
   }
@@ -172,6 +173,7 @@ function savetransactiondetails(param,param1){
         var desc = $('#desc'+value).val();
         // var hsn = $('#hsn'+value).val();
         var qty = $('#qty'+value).val();
+        var billingqty = $('#billingqty'+value).val();
         var rate = $('#rate'+value).val();
         var itemdiscount = $('#itemdiscount'+value).val();
 
@@ -193,6 +195,7 @@ function savetransactiondetails(param,param1){
               itemdetailid:itemdetailid,
               desc:desc,
               qty:qty,
+              billingqty:billingqty,
               rate:rate,
               itemdiscount:itemdiscount,
               tax:tax
@@ -244,6 +247,7 @@ function transactionmaster(){
   var  remark = $("#remark").val();
   var  discount = $("#discount").val();
   var contactid= $("#hidecontactid").val();
+  var remainamount = parseFloat($("#remainamount").val());
   var finaltotal = parseFloat($("#finaltotal").text());
   if(contactid===""){
     contactid=0;
@@ -262,6 +266,7 @@ function transactionmaster(){
         datecreated:invoicedate,
         duedate:duedate,
         paytermval:terms,
+        remainamount:remainamount,
         finaltotal:finaltotal,
         remark:remark
       },
@@ -311,6 +316,7 @@ $('#DyanmicTable tbody td:nth-child(1)').each(function () {
       var desc = $('#desc'+value).val();
       var hsn = $('#hsn'+value).val();
       var qty = $('#qty'+value).val();
+      var billingqty = $('#billingqty'+value).val();
       var rate = $('#rate'+value).val();
       var itemdiscount = $('#itemdiscount'+value).val();
       var amount = $('#amount'+value).val();

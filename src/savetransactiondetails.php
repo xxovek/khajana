@@ -13,6 +13,7 @@ $companyId = $_SESSION['company_id'];
   $desc = $_REQUEST['desc'];
 
   $qty = $_REQUEST['qty'];
+  $billingqty = $_REQUEST['billingqty'];
   $rate = $_REQUEST['rate'];
   $itemdiscount = $_REQUEST['itemdiscount'];
   $tax = $_REQUEST['tax'];
@@ -23,8 +24,8 @@ $companyId = $_SESSION['company_id'];
   $TaxType = $row['TaxType'];
   $TaxPercent = $row['TaxPercent'];
 
-  $sql_insert = "INSERT INTO TransactionDetails( TransactionId, itemDetailId, qty, rate,discountAmount, TaxType, TaxPercent,description)
-  VALUES ($transactionId,$itemdetailid,$qty,$rate,$itemdiscount,'$TaxType','$TaxPercent','$desc')";
+  $sql_insert = "INSERT INTO TransactionDetails( TransactionId, itemDetailId, qty,BillQty,rate,discountAmount, TaxType, TaxPercent,description)
+  VALUES ($transactionId,$itemdetailid,$qty,$billingqty,$rate,$itemdiscount,'$TaxType','$TaxPercent','$desc')";
   // echo $sql_insert;
   if(mysqli_query($con,$sql_insert)){
       $item_id = mysqli_insert_id($con);

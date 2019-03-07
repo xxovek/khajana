@@ -14,6 +14,59 @@ session_start();
     $contactId="NULL";
   }
   $finaltotal=$_REQUEST['finaltotal'];
+  $amountreceived=$finaltotal;
+  $remainamount=$_REQUEST['remainamount'];
+  $maintransactionstatus = 'Open';
+  if($remainamount>0){
+  if($finaltotal<=$remainamount){
+    $sqlu ="UPDATE TransactionMaster TM SET TM.TransactionStatus ='Closed',TM.RemainingAmount=0 WHERE TM.PersonId =$personId AND TM.TransactionTypeId=3 AND TM.TransactionStatus IN ('Partial','Unapplied') AND TM.TransactionId NOT IN (SELECT maxa from (SELECT MAX(TransactionId) AS maxa FROM TransactionMaster TD where TD.PersonId =$personId
+     and TD.TransactionTypeId=3 and TD.TransactionStatus IN ('Partial','Unapplied') order by
+     TD.TransactionId) t)";
+    // echo $sqlu;
+    mysqli_query($con,$sqlu);
+    $balance = $remainamount - $finaltotal;
+    if($balance>0){
+      $transactionstatus ='Partial';
+    }
+    else {
+      $transactionstatus ='Closed';
+    }
+    $sqlun ="UPDATE TransactionMaster SET TransactionMaster.TransactionStatus='$transactionstatus',TransactionMaster.RemainingAmount='$balance' where TransactionMaster.PersonId ='$personId'
+    and TransactionMaster.TransactionTypeId=3 and TransactionMaster.TransactionStatus IN ('Partial','Unapplied') order by
+    TransactionMaster.TransactionId desc LIMIT 1";
+    mysqli_query($con,$sqlun);
+    $maintransactionstatus = 'Paid';
+    $amountreceived = $finaltotal; // IF Invoice amount is strickly less than credit balance
+    $finaltotal = 0;
+  }
+  else{
+    $balance = $remainamount;
+    if($balance>0){
+      $transactionstatus ='Closed';
+    }
+
+
+    $sqlu ="UPDATE TransactionMaster TM SET TM.TransactionStatus ='Closed',TM.RemainingAmount=0 WHERE TM.PersonId =$personId AND TM.TransactionTypeId=3 AND TM.TransactionStatus IN ('Partial','Unapplied') AND TM.TransactionId NOT IN (SELECT maxa from (SELECT MAX(TransactionId) AS maxa FROM TransactionMaster TD where TD.PersonId =$personId
+     and TD.TransactionTypeId=3 and TD.TransactionStatus IN ('Partial','Unapplied') order by
+     TD.TransactionId) t)";
+      mysqli_query($con,$sqlu);
+
+      $sqlun ="UPDATE TransactionMaster SET TransactionMaster.TransactionStatus='$transactionstatus',TransactionMaster.RemainingAmount='0' where TransactionMaster.PersonId ='$personId'
+      and TransactionMaster.TransactionTypeId=3 and TransactionMaster.TransactionStatus IN ('Partial','Unapplied') order by
+      TransactionMaster.TransactionId desc LIMIT 1";
+      mysqli_query($con,$sqlun);
+      $remainfinaltotal = $finaltotal - $remainamount;
+      if($remainfinaltotal>0){
+        $maintransactionstatus = 'Partial';
+      }
+      else {
+        $maintransactionstatus = 'Paid';
+      }
+      $amountreceived = $remainamount; // IF Invoice amount is strickly greater than credit balance
+      $finaltotal = $remainfinaltotal;
+
+  }
+  }
     // echo $contactId;
   // $contactId = !empty($contactId) ? "'$contactId'" : "NULL";
   $discount = $_REQUEST['discount'];
@@ -98,8 +151,8 @@ session_start();
   }
   // echo $TransactionNumber;
   $sql_insert = "INSERT INTO TransactionMaster(companyId, PersonId, contactId, TransactionTypeId, FinancialYear,
-    TransactionNumber, discount, DateCreated, DueDate, PaytermsId, remarks,TransactionStatus,RemainingAmount) VALUES
-  ($companyId,$personId,$contactId,'$formid','$financialyear','$TransactionNumber','$discount','$datecreated','$duedate',$PaytermsId,'$remark','Open','$finaltotal')";
+    TransactionNumber, discount, DateCreated, DueDate, PaytermsId, remarks,TransactionStatus,AmountRecieved,RemainingAmount) VALUES
+  ($companyId,$personId,$contactId,'$formid','$financialyear','$TransactionNumber','$discount','$datecreated','$duedate',$PaytermsId,'$remark','$maintransactionstatus','$amountreceived','$finaltotal')";
    // echo $sql_insert;
   if(mysqli_query($con,$sql_insert)){
     $item_id = mysqli_insert_id($con);

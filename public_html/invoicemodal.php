@@ -12,6 +12,7 @@
         <input type="hidden" id="hiddenformid" />
         <input type="hidden" id="hiddenformtype" />
         <input type="hidden" id="hiddentransactionid" />
+        <input type="hidden" id="remainamount" />
         <button type="button" class="close" data-dismiss="modal">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -142,20 +143,23 @@
                   <th class="text-left" >
             				DESCRIPTION
             			</th>
-                  <th class="text-left" style="width: 8%">
+                  <th class="text-left" style="width: 7%">
                     QTY
                   </th>
-                  <th class="text-left" style="width: 8%">
+                  <th class="text-left" style="width: 7%">
+                    B.QTY
+                  </th>
+                  <th class="text-left" style="width: 7%">
                     RATE
                   </th>
-                  <th class="text-center" style="width: 8%">
+                  <th class="text-center" style="width: 7%">
                     DISCOUNT
                   </th>
-            			<th class="text-center" style="width: 8%">
+            			<th class="text-center" style="width: 7%">
             				AMOUNT
             			</th>
 
-            			<th class="text-center" style="width: 8%">
+            			<th class="text-center" style="width: 7%">
             				TAX
             			</th>
             		</tr>
