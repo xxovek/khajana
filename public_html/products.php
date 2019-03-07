@@ -63,11 +63,11 @@ if(isset($_SESSION['company_id']))
       <header class="header bg-ui-general">
         <div class="header-action">
           <nav class="nav">
-            <a class="nav-link " href="allSales.php">All Sales</a>
+            <!-- <a class="nav-link " href="allSales.php">All Sales</a>
             <a class="nav-link" href="invoices.php">Invoices</a>
             <a class="nav-link" href="purchase.php">Purchase</a>
               <a class="nav-link" href="purchaseorder.php">Purchase Order</a>
-            <a class="nav-link " href="customers.php">Customers</a>
+            <a class="nav-link " href="customers.php">Customers</a> -->
             <a class="nav-link active" href="#">Products and Services</a>
             <!-- <a class="nav-link" href="taxes.php">Taxes</a> -->
 

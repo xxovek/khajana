@@ -49,11 +49,11 @@ if(isset($_SESSION['company_id'])){
         <div class="header-action">
           <nav class="nav">
             <a class="nav-link active" href="#">All Sales</a>
-            <a class="nav-link" href="invoices.php">Invoices</a>
+            <!-- <a class="nav-link" href="invoices.php">Invoices</a>
             <a class="nav-link" href="purchase.php">Purchase</a>
             <a class="nav-link" href="purchaseorder.php">Purchase Order</a>
             <a class="nav-link" href="customers.php">Customers</a>
-            <a class="nav-link" href="products.php">Products and Services</a>
+            <a class="nav-link" href="products.php">Products and Services</a> -->
           </nav>
         </div>
       </header><!--/.header -->
