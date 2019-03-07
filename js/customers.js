@@ -245,6 +245,7 @@ $("#myform").on('submit',function(e){
   var billaddr=document.getElementById('billaddr').value;
   var gstin=document.getElementById('GSTIN').value;
   var Pan=document.getElementById('PAN').value;
+  var companyName = document.getElementById('companyName').value;
   var bcountry=$("#bcountry").val();
   var bstate=$("#bstate").val();
   var bcity=$("#bcity").val();
@@ -272,7 +273,12 @@ $("#myform").on('submit',function(e){
     $.ajax({
         type: "POST",
         url: "../src/addCustomer.php",
-        data: {pid:pid,ctype1:ctype1,ctype:ctype,fname:fname,mname:mname,lname:lname,email:email,phone:phone,bcountry:bcountry,bstate:bstate,bcity:bcity,bzip:bzip,scountry:scountry,sstate:sstate,scity:scity,szip:szip,gstin:gstin,Pan:Pan,shipaddr:shipaddr,billaddr:billaddr},
+        data: {pid:pid,ctype1:ctype1,ctype:ctype,
+          fname:fname,mname:mname,lname:lname,
+          email:email,phone:phone,companyName:companyName,
+          bcountry:bcountry,bstate:bstate,bcity:bcity,bzip:bzip,
+          scountry:scountry,sstate:sstate,scity:scity,szip:szip,
+          gstin:gstin,Pan:Pan,shipaddr:shipaddr,billaddr:billaddr},
         dataType:'json',
         success: function(response) {
             app.toast(response.msg, {
@@ -445,6 +451,7 @@ function fetchCustomer(param) {
         $("#bzip").val(response.bzip);
         $("#personid").val(response.pid);
         $("#szip").val(response.szip);
+        // $("#companyName").val(response.companyName);
         // alert(response.bcountryid);
         // alert(response.bstateid);
         // alert(response.bcityid);
