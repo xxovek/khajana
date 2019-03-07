@@ -8,7 +8,6 @@ $companyId = $_SESSION['company_id'];
 $ctype=$_REQUEST['ctype'];
 $ctype = !empty($ctype) ? $ctype : "NULL";
 
-
 $ctype1=$_REQUEST['ctype1'];
 $ctype1 = !empty($ctype1) ? $ctype1 : "NULL";
 
@@ -55,9 +54,7 @@ if(!empty($bcity)){
 
 $bzip=$_REQUEST['bzip'];
 
-
 $shipaddr=$_REQUEST['shipaddr'];
-
 
 $scountry= $_REQUEST['scountry'];
 if(!empty($scountry)){
@@ -84,10 +81,8 @@ if(!empty($scity)){
 
 $szip=$_REQUEST['szip'];
 
-
 $gstin=$_REQUEST['gstin'];
 $PAN=$_REQUEST['Pan'];
-
 
 if(!empty($_REQUEST['pid'])){
   $pid=$_REQUEST['pid'];
@@ -97,61 +92,53 @@ if(!empty($_REQUEST['pid'])){
 
    mysqli_query($con,$PMUpdate_sql) or die(mysqli_error($con));
 
-
-
-
    $CMUpdateBAddr_sql="UPDATE ContactMaster,PersonContact SET contactAddress='$billaddr',contactNumber='$phone',country='$bcountry',
      CState='$bstate',city ='$bcity',zipcode='$bzip' where ContactMaster.AddressId = 1 and ContactMaster.contactId=PersonContact.ContactId and PersonContact.PersonId= $pid ";
 
     mysqli_query($con,$CMUpdateBAddr_sql) or die(mysqli_error($con));
-
-
-
 
     $CMUpdateSAddr_sql="UPDATE ContactMaster,PersonContact SET contactAddress='$shipaddr',contactNumber='$phone',country='$scountry', CState='$sstate',
      city ='$scity',zipcode='$szip' where ContactMaster.AddressId = 2 and ContactMaster.contactId=PersonContact.ContactId AND PersonContact.PersonId= $pid ";
 
      mysqli_query($con,$CMUpdateSAddr_sql) or die(mysqli_error($con));
 
-
    $CDUpdateGst_sql="UPDATE ContactDocument SET DocumentNumber='$gstin' where DocumentId='4' AND PersonId='$pid'";
    // echo $CDUpdateGst_sql;
 
    mysqli_query($con,$CDUpdateGst_sql) or die(mysqli_error($con));
-
 
    $CDUpdatePan_sql= "UPDATE ContactDocument SET DocumentNumber='$PAN' where DocumentId='1' AND PersonId='$pid'";
    // echo $CDUpdatePan_sql;
 
    mysqli_query($con,$CDUpdatePan_sql) or die(mysqli_error($con));
 
-
    // $response['true']=true;
    $response['msg']=$ctype.' '.$fname." Updated Successfully";
 }
 else {
-
 $sql1="INSERT INTO PersonMaster (companyId,personTypeId,FirstName,middleName,lastName,EmailId) VALUES($companyId,$ctype1,'$fname','$mname','$lname','$email')";
-// echo $sql1;
+
 mysqli_query($con,$sql1) or die(mysqli_error($con));
 $personid=mysqli_insert_id($con);
 
-$sql2="INSERT into ContactMaster (AddressId,contactNumber,country,CState,city,contactAddress,zipcode) values(1,'$phone','$bcountry','$bstate','$bcity','$billaddr','$bzip')";
+$sqlUser = "INSERT INTO UserMaster(emailId,companyId,PersonId)VALUES('$email',$companyId,$personid)";
+mysqli_query($con,$sqlUser) or die(mysqli_error($con));
+$sql2="INSERT INTO ContactMaster (AddressId,contactNumber,country,CState,city,contactAddress,zipcode) VALUES(1,'$phone','$bcountry','$bstate','$bcity','$billaddr','$bzip')";
 mysqli_query($con,$sql2);
 $contactid=mysqli_insert_id($con);
-$sql3="INSERT into PersonContact (ContactId,PersonId) values($contactid,$personid)";
+$sql3="INSERT INTO PersonContact (ContactId,PersonId) VALUES($contactid,$personid)";
 mysqli_query($con,$sql3) or die(mysqli_error($con));
 
-$sql6="INSERT into ContactMaster (AddressId,country,CState,city,contactAddress,zipcode) values(2,'$scountry','$sstate','$scity','$shipaddr','$szip')";
+$sql6="INSERT INTO ContactMaster (AddressId,country,CState,city,contactAddress,zipcode) VALUES(2,'$scountry','$sstate','$scity','$shipaddr','$szip')";
 mysqli_query($con,$sql6);
 $contactid1=mysqli_insert_id($con);
 
-$sql7="INSERT into PersonContact (ContactId,PersonId) values($contactid1,$personid)";
+$sql7="INSERT INTO PersonContact (ContactId,PersonId) VALUES($contactid1,$personid)";
 mysqli_query($con,$sql7) or die(mysqli_error($con));
 
-$sql4="INSERT into ContactDocument (DocumentId,PersonId,DocumentNumber) values(4,$personid,'$gstin')";
+$sql4="INSERT INTO ContactDocument (DocumentId,PersonId,DocumentNumber) VALUES(4,$personid,'$gstin')";
 mysqli_query($con,$sql4) or die(mysqli_error($con));
-$sql5="INSERT into ContactDocument (DocumentId,PersonId,DocumentNumber) values(1,$personid,'$PAN')";
+$sql5="INSERT INTO ContactDocument (DocumentId,PersonId,DocumentNumber) VALUES(1,$personid,'$PAN')";
 $result5=mysqli_query($con,$sql5) or die(mysqli_error($con));
 if($result5){
  $response['msg']=$ctype.' '.$fname." Added Successfully";
@@ -159,7 +146,6 @@ if($result5){
 else{
   $response['msg']='Server Error Please Try Again';
 }
-
 }
 mysqli_close($con);
 exit(json_encode($response));

@@ -33,6 +33,9 @@ $('#fname').on('keyup',function(){
 $('#ctype').on('blur',function(){
   $('.invalidfeedback1').html('');
 });
+$('#email').on('keyup',function(){
+  $('.invalidfeedback2').html('');
+});
 // spanptype();
 
 
@@ -228,8 +231,8 @@ function fetchsinglescity(){
 // }
 
 $("#myform").on('submit',function(e){
-    e.preventDefault();
-    var i=0;
+  e.preventDefault();
+  var i=0;
   var pid = document.getElementById('personid').value;
   var ctype1=document.getElementById('ctype').value;
   var ctype = $("#ctype option:selected").text();
@@ -246,15 +249,18 @@ $("#myform").on('submit',function(e){
   var bstate=$("#bstate").val();
   var bcity=$("#bcity").val();
   var bzip=document.getElementById('bzip').value;
-  // alert(bzip);
   var scountry=$("#scountry").val();
   var sstate=$("#sstate").val();
   var scity=$("#scity").val();
   var szip=document.getElementById('szip').value;
-  // alert(szip);
   if(fname === ""){
     $('#fname').focus();
     $('.invalidfeedback').html('<font color="#f96868">Customer Name is Required</font>');
+    i=1;
+  }
+  if(email === ""){
+    $('#email').focus();
+    $('.invalidfeedback2').html('<font color="#f96868">Email Id is Required</font>');
     i=1;
   }
   if(ctype === ""){
