@@ -1,3 +1,0 @@
-function pqr(){
-    alert('ok');
-}
