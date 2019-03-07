@@ -259,11 +259,6 @@ $("#myform").on('submit',function(e){
     $('.invalidfeedback').html('<font color="#f96868">Customer Name is Required</font>');
     i=1;
   }
-  if(email === ""){
-    $('#email').focus();
-    $('.invalidfeedback2').html('<font color="#f96868">Email Id is Required</font>');
-    i=1;
-  }
   if(ctype === ""){
     $('#ctype').focus();
     $('.invalidfeedback1').html('<font color="#f96868">Customer Type is Required</font>');
@@ -377,7 +372,7 @@ function displaytransactions(param) {
       dataType:"json",
       data:{pid:param},
       success: function(response) {
-        // alert(response)
+        alert(response)
         // var response =JSON.parse(msg);
         var count= response.length;
         if(count > 0){
@@ -451,7 +446,7 @@ function fetchCustomer(param) {
         $("#bzip").val(response.bzip);
         $("#personid").val(response.pid);
         $("#szip").val(response.szip);
-        // $("#companyName").val(response.companyName);
+        $("#companyName").val(response.CompanyName);
         // alert(response.bcountryid);
         // alert(response.bstateid);
         // alert(response.bcityid);

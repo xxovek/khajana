@@ -34,6 +34,7 @@ if($result = mysqli_query($con,$sql)){
     $response['mname'] = $row['middleName'];
     $response['lname'] = ucwords($row['lastName']);
     $response['email'] = $row['EmailId'];
+    $response['CompanyName'] = $row['CompanyName'];
     $response['phone'] = $row['contactNumber'];
     $response['gstin'] = $resgst['DocumentNumber'];
     $response['Pan'] = $resPAN['DocumentNumber'];

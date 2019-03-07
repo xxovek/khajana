@@ -58,17 +58,23 @@
 
          <!-- <div class="h-20px"></div> -->
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-4">
             <div class="form-group">
-        <label for="email"  class="require">Email</label>
-        <input type="email" autocomplete="off" class="form-control form-control-sm" placeholder="Email"  data-provide="tooltip" data-placement="top" data-original-title="Customers EmailId Example:anju@gmail.com" tabindex="4" name="email" id="email" required>
-        <div class="invalidfeedback2"></div>
+        <label for="email">Email</label>
+        <input type="email" autocomplete="off" class="form-control form-control-sm" placeholder="Email"  data-provide="tooltip" data-placement="top" data-original-title="Customers EmailId Example:anju@gmail.com" tabindex="4" name="email" id="email">
       </div>
         </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
         <label for="phone">Phone</label>
         <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Phone" data-provide="tooltip" data-placement="top" data-original-title="Customers Phone Number Example:9988556677" tabindex="5" minlength="10" maxlength="10" onkeypress="return isNumberKey(event)" onchange="phonenumber(this);" name="phone" id="phone" value="">
+        <span id="msgid"></span>
+      </div>
+        </div>
+        <div class="col-sm-4">
+        <div class="form-group">
+        <label for="phone">Company</label>
+        <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Company/firm" data-provide="tooltip" data-placement="top" data-original-title="Firm Name of customer" name="companyName" id="companyName">
         <span id="msgid"></span>
       </div>
         </div>

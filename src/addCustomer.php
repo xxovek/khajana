@@ -83,11 +83,13 @@ $szip=$_REQUEST['szip'];
 
 $gstin=$_REQUEST['gstin'];
 $PAN=$_REQUEST['Pan'];
+$companyName = $_REQUEST['companyName'];
+$companyName = !empty($companyName) ? $companyName : "NULL";
 
 if(!empty($_REQUEST['pid'])){
   $pid=$_REQUEST['pid'];
 
-  $PMUpdate_sql="UPDATE PersonMaster SET PersonTypeId =$ctype1,FirstName ='$fname',middleName='$mname',
+  $PMUpdate_sql="UPDATE PersonMaster SET CompanyName='$companyName',PersonTypeId =$ctype1,FirstName ='$fname',middleName='$mname',
    lastName ='$lname',EmailId='$email' where PersonId = $pid";
 
    mysqli_query($con,$PMUpdate_sql) or die(mysqli_error($con));
@@ -116,16 +118,24 @@ if(!empty($_REQUEST['pid'])){
    $response['msg']=$ctype.' '.$fname." Updated Successfully";
 }
 else {
-$sql1="INSERT INTO PersonMaster (companyId,personTypeId,FirstName,middleName,lastName,EmailId) VALUES($companyId,$ctype1,'$fname','$mname','$lname','$email')";
+$sql1="INSERT INTO PersonMaster (companyId,personTypeId,FirstName,middleName,lastName,EmailId,CompanyName) VALUES($companyId,$ctype1,'$fname','$mname','$lname','$email','$companyName')";
 
 mysqli_query($con,$sql1) or die(mysqli_error($con));
 $personid=mysqli_insert_id($con);
 
-$sqlUser = "INSERT INTO UserMaster(emailId,companyId,PersonId)VALUES('$email',$companyId,$personid)";
-mysqli_query($con,$sqlUser) or die(mysqli_error($con));
+
+
 $sql2="INSERT INTO ContactMaster (AddressId,contactNumber,country,CState,city,contactAddress,zipcode) VALUES(1,'$phone','$bcountry','$bstate','$bcity','$billaddr','$bzip')";
 mysqli_query($con,$sql2);
 $contactid=mysqli_insert_id($con);
+
+// $sqlCompany = "INSERT INTO CompanyMaster(companyName,contactId) VALUES('$companyName',$contactid)";
+// mysqli_query($con,$sqlCompany);
+// $companyIdC=mysqli_insert_id($con);
+
+// $sqlUser = "INSERT INTO UserMaster(emailId,companyId,PersonId,refCompanyId)VALUES('$email',$companyIdC,$personid,$companyId)";
+// mysqli_query($con,$sqlUser) or die(mysqli_error($con));
+
 $sql3="INSERT INTO PersonContact (ContactId,PersonId) VALUES($contactid,$personid)";
 mysqli_query($con,$sql3) or die(mysqli_error($con));
 
