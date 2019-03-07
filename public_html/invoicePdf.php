@@ -209,7 +209,6 @@ function taxcal($param,$param1,$param2)
 {
 $total=$param1;
 include '../config/connection.php';
-
 $response = $response1 = $response2 = [];
 $arrJson=$param;
 $taxtable='';
