@@ -158,7 +158,7 @@
       </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="padding-top: 10px;">
             <div class="col-md-4">
               <div class="form-group">
                       <label for="textarea"><strong>Memo</strong></label>

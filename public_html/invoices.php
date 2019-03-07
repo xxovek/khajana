@@ -326,7 +326,7 @@ if(isset($_SESSION['company_id']))
               getdepositeto();
               getcustomerpayment();
               getpaymethodmethod();
-
+                $("#paymentTblBody").empty();
               // displayPaymentTblData();
               setTimeout(function()
               {

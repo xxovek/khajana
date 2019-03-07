@@ -262,15 +262,19 @@ function displayPaymentTblData(param){
               $("#spanamounttoapply").html(totsum);
               $("#spanamounttocredit").html("0.00");
               $("#paymentTblBody").html(tbl);
-              if ($.fn.DataTable.isDataTable("#paymentamountTbl") && count==0) {
-              
-                $('#paymentamountTbl').DataTable().clear().destroy();
-                }
+              // if ($.fn.DataTable.isDataTable("#paymentamountTbl") && count==0) {
+              //   $('#paymentamountTbl').DataTable().clear().destroy();
+              //   }
 
                $('#paymentamountTbl').DataTable({
                  searching: true,
                  retrieve: true,
-                 bPaginate: $('tbody tr').length>10,
+                 "bPaginate": false,
+                 // "bLengthChange": false,
+                 // "bFilter": true,
+                 "bInfo": false,
+    // "             bAutoWidth": false
+                 // bPaginate: $('tbody tr').length>10,
                  order: [],
                  columnDefs: [ { orderable: false, targets: [0,1,2,3,4,5] } ],
                  dom: 'Bfrtip',
