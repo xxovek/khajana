@@ -17,7 +17,7 @@ function addcustomerpayterm1(){
            var response = JSON.parse(msg);
            $("#phidecontactid").val(response['contactId']);
            $("#pbillingaddress").val(response['contactAddress']);
-
+           $("#phiddenremainamount").val(response['RemainingAmount']);
         }
     });
   }

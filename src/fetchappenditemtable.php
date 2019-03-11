@@ -1,7 +1,7 @@
 <?php
 include '../config/connection.php';
 $transactionno=$_REQUEST['transactionno'];
-$sql = "SELECT IDM.ItemId, TD.itemDetailId,TD.qty,TD.rate,TD.TaxType,TD.TaxPercent,TD.discountAmount,TD.description,TM.discount,TM.TransactionId,TM.PaytermsId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.remarks,TM.PersonId,TM.contactId
+$sql = "SELECT IDM.ItemId, TD.itemDetailId,TD.itemunitval,TD.qty,TD.rate,TD.TaxType,TD.TaxPercent,TD.discountAmount,TD.description,TM.discount,TM.TransactionId,TM.PaytermsId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.remarks,TM.PersonId,TM.contactId
 FROM TransactionDetails TD
 LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
 LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
@@ -17,7 +17,7 @@ if(mysqli_num_rows($result)>0){
         'itemDetailId' => $row['itemDetailId'],
         'qty' => $row['qty'],
         'rate' => $row['rate'],
-
+        'itemunitval' => $row['itemunitval'],
         'TaxType' => $row['TaxType'],
         'TaxPercent' => $row['TaxPercent'],
         'itemdiscount' => $row['discountAmount'],

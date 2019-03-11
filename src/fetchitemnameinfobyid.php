@@ -6,7 +6,7 @@ $response = [];
 $itemid = $_REQUEST['itemname'];
 
 
-$sql = "SELECT IM.HSN,IM.Description,ID.Quantity,IT.TaxId,IP.price,ID.itemDetailId,ID.ReorderLabel FROM ItemMaster IM LEFT JOIN ItemDetailMaster ID ON IM.ItemId = ID.ItemId LEFT JOIN ItemTax IT ON IT.ItemDetailId = ID.itemDetailId LEFT JOIN ItemPrice IP ON IP.ItemDetailId = ID.itemDetailId WHERE IM.ItemId = $itemid";
+$sql = "SELECT IM.HSN,IM.Description,ID.PackingQty,ID.SubPacking,ID.Quantity,ID.totalqty,IT.TaxId,IP.price,ID.itemDetailId,ID.ReorderLabel FROM ItemMaster IM LEFT JOIN ItemDetailMaster ID ON IM.ItemId = ID.ItemId LEFT JOIN ItemTax IT ON IT.ItemDetailId = ID.itemDetailId LEFT JOIN ItemPrice IP ON IP.ItemDetailId = ID.itemDetailId WHERE IM.ItemId = $itemid";
 if($result = mysqli_query($con,$sql) or die(mysqli_error($con))){
   $row = mysqli_fetch_array($result);
   $response['HSN'] = $row['HSN'];
@@ -16,6 +16,9 @@ if($result = mysqli_query($con,$sql) or die(mysqli_error($con))){
   $response['price'] = $row['price'];
   $response['itemDetailId'] = $row['itemDetailId'];
   $response['ReorderLabel'] = $row['ReorderLabel'];
+  $response['PackingQty'] = $row['PackingQty'];
+  $response['SubPacking'] = $row['SubPacking'];
+  $response['totalqty'] = $row['totalqty'];
 }
 
 

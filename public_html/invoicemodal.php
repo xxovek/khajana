@@ -141,25 +141,26 @@
             				HSN/SAC
             			</th>
                   <th class="text-left" >
-            				DESCRIPTION
+            				UNIT
             			</th>
-                  <th class="text-left" style="width: 7%">
+
+                  <th class="text-left" style="width: 8%">
                     QTY
                   </th>
-                  <th class="text-left" style="width: 7%">
+                  <th class="text-left" style="width: 8%">
                     B.QTY
                   </th>
-                  <th class="text-left" style="width: 7%">
+                  <th class="text-left" style="width: 8%">
                     RATE
                   </th>
-                  <th class="text-center" style="width: 7%">
+                  <th class="text-center" style="width: 8%">
                     DISCOUNT
                   </th>
-            			<th class="text-center" style="width: 7%">
+            			<th class="text-center" style="width: 8%">
             				AMOUNT
             			</th>
 
-            			<th class="text-center" style="width: 7%">
+            			<th class="text-center" style="width: 8%">
             				TAX
             			</th>
             		</tr>

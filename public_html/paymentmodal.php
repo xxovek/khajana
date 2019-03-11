@@ -10,6 +10,8 @@
         <input type="hidden" id="phiddenformid" />
         <input type="hidden" id="phiddenformtype" />
         <input type="hidden" id="phiddentransactionid" />
+          <!-- <input type="hidden" id="remainamount" /> -->
+        <input type="hidden" id="phiddenremainamount" />
         <button type="button" class="close" data-dismiss="modal">
           <span aria-hidden="true">&times;</span>
         </button>

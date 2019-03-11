@@ -170,19 +170,25 @@ function savetransactiondetails(param,param1){
 
         var itemdetailid = $("#itemdetailid"+value).val();
         // var itemname = $('#itemname'+value).val();
-        var desc = $('#desc'+value).val();
+        // var desc = $('#desc'+value).val();
+
         // var hsn = $('#hsn'+value).val();
         var qty = $('#qty'+value).val();
         var billingqty = $('#billingqty'+value).val();
         var rate = $('#rate'+value).val();
         var itemdiscount = $('#itemdiscount'+value).val();
-
+        var itemunits = $("#itemunits"+value).val();
+        var unitsubpackingqty = parseInt($("#unitsubpackingqty"+value).val());
+        var unitpackingqty =parseInt($("#unitpackingqty"+value).val());
+        var unitremainqty = parseInt($("#unitremainqty"+value).val());
+        var hiddenqtyonhand   = parseInt($("#hiddenqtyonhand"+value).val());
         // var amount = $('#amount'+value).val();
         var tax = $('#tax'+value).val();
         // alert(tax);
         var formid = $("#hiddenformid").val();
         var formtype = $("#hiddenformtype").val();
         var htransactionid = $("#hiddentransactionid").val();
+
         $.ajax({
             async: false,
             type: "POST",
@@ -193,11 +199,16 @@ function savetransactiondetails(param,param1){
               hidetransactionid:htransactionid,
               transactionId:transactionId,
               itemdetailid:itemdetailid,
-              desc:desc,
+              // desc:desc,
               qty:qty,
               billingqty:billingqty,
               rate:rate,
               itemdiscount:itemdiscount,
+              itemunits:itemunits,
+              unitsubpackingqty:unitsubpackingqty,
+              unitpackingqty:unitpackingqty,
+              unitremainqty:unitremainqty,
+              hiddenqtyonhand:hiddenqtyonhand,
               tax:tax
             },
             success: function(msg) {
@@ -317,11 +328,12 @@ $('#DyanmicTable tbody td:nth-child(1)').each(function () {
       var hsn = $('#hsn'+value).val();
       var qty = $('#qty'+value).val();
       var billingqty = $('#billingqty'+value).val();
+      var itemunits = $("#itemunits"+value).val();
       var rate = $('#rate'+value).val();
       var itemdiscount = $('#itemdiscount'+value).val();
       var amount = $('#amount'+value).val();
       var tax = $('#tax'+value).val();
-      if(itemname==""||qty==""||rate==""||amount==""||itemdiscount==""||tax==""){
+      if(itemname==""||qty==""||rate==""||amount==""||itemdiscount==""||itemunits==""||tax==""){
          var param1="Please Check Table Row No"+value;
           j=1;
           app.toast(param1, {

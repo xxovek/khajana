@@ -152,9 +152,10 @@ $i=0;
     if(mysqli_num_rows($result)>0){
       while($row = mysqli_fetch_array($result))
       {
+        $i++;
         $total=($row['BillQty']*$row['rate'])-(($row['BillQty']*$row['rate'])*(($row['discountAmount']/100)));
 $itemtable.=' <tr>
-    <td style="width:10%;border:1px solid black;text-align:center;">'.($i+1).'</td>
+    <td style="width:10%;border:1px solid black;text-align:center;">'.($i).'</td>
     <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['BillQty'].'</td>
