@@ -34,7 +34,8 @@ if($result = mysqli_query($con,$sql)){
         'name' =>$row['TaxType'],
         'discount' =>$row['discount'],
         'discountAmount' =>$row['discountAmount'],
-        'taxpercent' =>$row['TaxPercent']
+        'taxpercent' =>$row['TaxPercent'],
+        'TransactionId'=>$row['TransactionId']
         ]);
   }
 }

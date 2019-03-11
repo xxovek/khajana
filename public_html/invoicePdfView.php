@@ -181,6 +181,7 @@ $t_id=$_REQUEST['tid'];
   </body>
   <script type="text/javascript">
     $(document).ready(function(){
+     
       companyBasics();
       invoiceDetails();
       itemDetails();
@@ -227,27 +228,28 @@ $t_id=$_REQUEST['tid'];
             '</td><td>'+response[i]['BillQty']+'</td><td>'+response[i]['rate']+'</td><td>'+response[i]['discountAmount']+'</td><td>'+response[i]['total'].toFixed(2)+'</td><td>'+response[i]['tax']+'</td></tr>')
           }
           $("#subtotal").html(subtotal.toFixed(2));
-          tryied(data,subtotal,response[0]['discount']);
+          tryied(response[0]['TransactionId'],response[0]['discount']);
+         
         }
       });
     }
-    function tryied(param,param1,discount) {
-      var pparam=JSON.parse(param)
+    function tryied(TransactionId,discount) {
       $.ajax({
         url:'../src/invoiceItemsTax2.php',
-        data:{arr:pparam},
-        success:function(data){
-          var total=param1;
-          var response=JSON.parse(data);
-          var count=Object.keys(response).length;
+        data:{TransactionId:TransactionId},
+        dataType:'json',
+        success:function(response){
+          var count=response.length;
+          
+          var FinalTotal = response[count-1].FinalTotal;
           for (var i = 0; i < count; i++) {
-            total+=response[i]['val'];
-            $("#taxcal").append('<tr class="text-center"><td>'+response[i]['tname']+' @</td><td>'+response[i]['tval']+
-            '% on</td><td>'+response[i]['taxamt']+'</td><td>'+response[i]['val'].toFixed(2)+'</td></tr>')
+            $("#taxcal").append('<tr class="text-center"><td>CGST @</td><td>'+response[i]['GST']+
+            '% on</td><td>'+response[i]['Total_before_tax']+'</td><td>'+response[i]['Tax']+'</td></tr><tr class="text-center"><td>SGST @</td><td>'+response[i]['GST']+
+            '% on</td><td>'+response[i]['Total_before_tax']+'</td><td>'+response[i]['Tax']+'</td></tr>');
           }
-          $("#total").html(total.toFixed(2));
-          var discounttotal=(total)*(discount)/100;
-          var finaltotal=total-discounttotal;
+          $("#total").html(FinalTotal);
+          var discounttotal=(FinalTotal)*(discount)/100;
+          var finaltotal=FinalTotal-discounttotal;
           $("#discounttotal").html(discounttotal.toFixed(2));
           $("#finaltotal").html(finaltotal.toFixed(2));
         }

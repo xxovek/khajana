@@ -154,6 +154,7 @@ $i=0;
       {
         $i++;
         $total=($row['BillQty']*$row['rate'])-(($row['BillQty']*$row['rate'])*(($row['discountAmount']/100)));
+<<<<<<< HEAD
 $itemtable.=' <tr>
     <td style="width:10%;border:1px solid black;text-align:center;">'.($i).'</td>
     <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
@@ -163,6 +164,17 @@ $itemtable.=' <tr>
     <td style="width:20%;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
       <td style="width:20%;border:1px solid black;text-align:center;">'.round($total,2).'</td>
       <td style="width:20%;border:1px solid black;text-align:center;">'.$row['TaxPercent'].'% '.$row['TaxType'].'</td>
+=======
+      $itemtable.='<tr>
+    <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i).'</td>
+    <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
+    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
+    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['BillQty'].'</td>
+    <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'. $row['rate'].'</td>
+    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
+    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.round($total,2).'</td>
+    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['TaxPercent'].'% '.$row['TaxType'].'</td>
+>>>>>>> f6b32b50e2e1d9f64193ca87e9e0fed073f89017
 </tr>';
 }
 }
@@ -178,14 +190,15 @@ FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = 
 LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
 LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
 WHERE TM.TransactionId =  $invoice_number";
-// echo $sql;
-  $response = [];
+
+$response = [];
 $taxcal='';
   $subtotal=0;
   if($result = mysqli_query($con,$sql)){
     if(mysqli_num_rows($result)>0){
       while($row = mysqli_fetch_array($result))
       {
+        $TransactionId = $row['TransactionId'];
         $total=$row['BillQty']*$row['rate'];
         $total1=($total-($total*($row['discountAmount']/100)));
         $subtotal+=$total1;
@@ -203,153 +216,120 @@ $taxcal='';
     }
   }
   }
-  $finaltab=taxcal($response,$subtotal,$response[0]['discount']);
+  $finaltab=taxcal($TransactionId,$response[0]['discount']);
   return $finaltab;
 }
-function taxcal($param,$param1,$param2)
+function taxcal($Tid,$param2)
 {
-$total=$param1;
 include '../config/connection.php';
-
-$response = $response1 = $response2 = [];
-$arrJson=$param;
-$taxtable='';
-$length=count($arrJson);
-$keyVal   = 'GST';
-$key2=[];
-for ($i=0; $i <$length ; $i++) {
-  $fl=0;
-  $flag=$result1=0;
-  $result=$arrJson[$i]['total'];
-  if($arrJson[$i]['name']!=$keyVal)
-  {
+$response = [];
+$taxtable = '';
+$sql = "SELECT TD.TransactionId,TD.TaxType,TD.TaxPercent,TD.TaxPercent/2 AS IGST,SUM(TD.BillQty*TD.rate) AS Total_before_tax,
+((SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100)/2 AS Tax,SUM(TD.BillQty*TD.rate)+(SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100 AS Total_after_tax 
+FROM TransactionDetails TD WHERE TD.TransactionId = $Tid GROUP BY TD.TaxPercent,TD.TransactionId";
+$result = mysqli_query($con,$sql);
+$subtotal = 0;
+$finalTotal = 0;
+if(mysqli_num_rows($result)>0){
+  while($row = mysqli_fetch_array($result)){
+    $subtotal +=$row['Total_before_tax'];
+    $finalTotal +=$row['Total_after_tax'];
     array_push($response,[
-        'tname' => $arrJson[$i]['name'],
-        'tval'=> $arrJson[$i]['taxpercent'],
-        'taxamt'=> $arrJson[$i]['total'],
-        'val'=> $arrJson[$i]['total']*(($arrJson[$i]['taxpercent'])/100)
-        ]);
+      'GST' => $row['IGST'],
+      'Total_before_tax' => $row['Total_before_tax'],
+      'Tax' => $row['Tax'],
+      'FinalTotal' => number_format($finalTotal,2)
+    ]);
   }
-  else  {
-    if($i==($length-1) && !(in_array($arrJson[$i]['taxpercent'],$key2)))
-    {
-      $tax1=($arrJson[$i]['taxpercent'])/2;
-      array_push($response,[
-          'tname' => 'CGST',
-          'tval'=> ($arrJson[$i]['taxpercent'])/2,
-          'taxamt'=>$arrJson[$i]['total'],
-          'val'=> $arrJson[$i]['total']*(($tax1)/100)
-          ]);
-          array_push($response,[
-              'tname' => 'SGST',
-              'tval'=>($arrJson[$i]['taxpercent'])/2,
-              'taxamt'=>$arrJson[$i]['total'],
-              'val'=> $arrJson[$i]['total']*(($tax1)/100)
-              ]);
-              break;
-    }
-    elseif (!(in_array($arrJson[$i]['taxpercent'],$key2))) {
-      for ($j=($i+1); $j <$length ; $j++) {
-        if ($arrJson[$i]['taxpercent']==$arrJson[$j]['taxpercent']) {
-          $tax=($arrJson[$i]['taxpercent'])/2;
-          $result+=($arrJson[$j]['total']);
-          $key2[]=$arrJson[$i]['taxpercent'];
-          $fl=1;
-        }
-
-      }
-      if($fl==1)
-      {
-        array_push($response,[
-            'tname' => 'CGST',
-            'tval'=> $tax,
-            'taxamt'=> $result,
-            'val'=> $result*($tax/100)
-            ]);
-            array_push($response,[
-                'tname' => 'SGST',
-                'tval'=> $tax,
-                'taxamt'=> $result,
-                'val'=>$result*($tax/100)
-                ]);
-              }
-              else {
-                $tax2=($arrJson[$i]['taxpercent'])/2;
-                array_push($response,[
-                    'tname' => 'CGST',
-                    'tval'=> ($arrJson[$i]['taxpercent'])/2,
-                    'taxamt'=> $arrJson[$i]['total'],
-                    'val'=>  $arrJson[$i]['total']*(($tax2)/100)
-                    ]);
-                    array_push($response,[
-                        'tname' => 'SGST',
-                        'tval'=> ($arrJson[$i]['taxpercent'])/2,
-                        'taxamt'=> $arrJson[$i]['total'],
-                        'val'=> $arrJson[$i]['total']*(($tax2)/100)
-                        ]);
-              }
-    }
-
-
-    }
-  }
-
-  for ($i = 0; $i < count($response); $i++) {
-    $total+=$response[$i]['val'];
-
+}
+$count = count($response);
+$total = (int)$response[$count-1]['FinalTotal'];
+  for ($i = 0; $i <$count ; $i++) {
     $taxtable.='<tr>
-        <td  style="width=10%;border-bottom:1px solid black;border-right:1px solid black;">
-        '.$response[$i]['tname'].' @ '.$response[$i]['tval'].
-        '% on  '.round($response[$i]['taxamt'],2).'
+        <td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
+        CGST @'.$response[$i]['GST'].
+        '% on  '.round($response[$i]['Total_before_tax'],2).'
         </td>
-        <td style="width=10%;border-bottom:1px solid black;" >
-      '.round($response[$i]['val'],2).'
+        <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;" >
+      '.round($response[$i]['Tax'],2).'
         </td>
-    </tr>';
+    </tr><tr>
+    <td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
+    SGST @'.$response[$i]['GST'].
+    '% on  '.round($response[$i]['Total_before_tax'],2).'
+    </td>
+    <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;" >
+  '.round($response[$i]['Tax'],2).'
+    </td>
+</tr>';
   }
   $discounttotal=($total)*($param2)/100;
   $finaltotal=$total-$discounttotal;
   $taxtable.='
   <tr >
-      <td  style="width=10%;border-bottom:1px solid black;border-right:1px solid black" >
+      <td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
        <strong>Sub - Total</strong>
       </td>
-      <td style="width=10%;border-bottom:1px solid black;">
-       '.round($param1,2).'
+      <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
+       '.round( $subtotal,2).'
       </td>
   </tr>
 
 <tr>
-<td  style="width=20%;border-bottom:1px solid black;border-right:1px solid black">
+<td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
 <strong> Total</strong>
 </td>
-<td style="width=20%;border-bottom:1px solid black;">
+<td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
  '.round($total,2).'
 </td>
 </tr>
   <tr>
-  <td  style="width=20%;border-bottom:1px solid black;border-right:1px solid black" >
+  <td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
    <strong>Discount Value</strong>
   </td>
-  <td style="width=50%;border-bottom:1px solid black;">
+  <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
    '.round($discounttotal,2).'
   </td>
   </tr>
   <tr>
-      <td  style="width=20%;border-right:1px solid black"  >
+      <td  style="width:10%;border:1px solid black;text-align:center;line-height: 20px;" >
        <strong>GRAND TOTAL</strong>
       </td>
-      <td style="width=50%;">
+      <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
        <strong>'.round($finaltotal,2).'</strong>
       </td>
   </tr>';
 return $taxtable;
 }
 
-$html='<body style="font-family:verdana;font-size:12px;">
-
+$html='<body >
+<style type="text/css">
+    * {
+        font-family: Verdana, Arial, sans-serif;
+    }
+    table{
+        font-size: x-small;
+    }
+    tfoot tr td{
+        font-weight: bold;
+        font-size: x-small;
+    }
+    .gray {
+        background-color: lightgray
+    }
+    footer {
+      position: fixed; 
+      bottom: -1px; 
+      left: 0px; 
+      right: 0px;
+      height: 30%; 
+      text-align: center;
+      line-height: 20px;
+  }
+</style>
+</style>
 	<div id="page-wrap" >
-
+<main>
   <table width="100%" style="border:1px solid;" cellspacing="0" cellpadding="0">
   <tr>
   <td style="height:30px; border-bottom:1px solid;" valign="top">
@@ -361,14 +341,13 @@ $html='<body style="font-family:verdana;font-size:12px;">
 
   <table width="100%" cellspacing="0" cellpadding="0">
 '.company_info().'
-  <!-- Invoice Other Details -->
   </td>
   </tr>
   </table>
-
+  </table>
     <div id="content">
       <div id="invoice_body"><br>
-
+     
         <table cellspacing="0" cellpadding="0" width="100%">
           <tr style="background:#fff;">
               <td style="width:10%;border:1px solid black;text-align:center;"><strong>Sr No.</strong></td>
@@ -382,27 +361,35 @@ $html='<body style="font-family:verdana;font-size:12px;">
               <td style="width:20%;color: #000000;border:1px solid black;text-align:center;"><strong>Tax</strong></td>
           </tr>
         '.fetch_Items().'
+        '.fetch_Items().'
+        '.fetch_Items().'
+        '.fetch_Items().'
+        '.fetch_Items().'
           </table>
-
-
+          <p style="page-break-before: always;"></p>
         </div>
     </div>
-    </table>
+   
     <br>
-    <table style="float:right;width:50%;border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;border-top:1px solid black;">
+    </main>
+    <footer>
+    <div id="content">
+    <table cellspacing="0" cellpadding="0" width="100%" style="float:right;margin-bottom:10px;border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;border-top:1px solid black;">
   '.subtotal().'
-
+  </div>
   </table>
-	</div>
+  </footer>
   <h5>Notes</h5>
   <p class="text-muted" id="notes">'.notes().'</p>
+	</div>
+  
 </body>';
-
+$dompdf->set_option('isHtml5ParserEnabled', true);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->loadHtml($html);
-
 $dompdf->render();
-$dompdf->stream("Fastinvo.pdf", array("Attachment" => false));
-
+$canvas = $dompdf->get_canvas();
+$canvas->page_text(16, 800, "Page: {PAGE_NUM} of {PAGE_COUNT}", $font, 8, array(0,0,0));
+$dompdf->stream("FoodkorInvoice.pdf", array("Attachment" => false));
 exit(0);
 ?>
