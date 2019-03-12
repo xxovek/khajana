@@ -30,9 +30,9 @@ if($method == "POST")
   $PackingTypeId = !empty($PackingTypeId) ? $PackingTypeId : "NULL";
   $ItemTax = !empty($ItemTax) ? $ItemTax : "NULL";
   $SupplierId = !empty($SupplierId) ? $SupplierId : "NULL";
-  $packingSubQty = !empty($packingSubQty) ? $packingSubQty : "NULL";
+  $packingSubQty = !empty($packingSubQty) ? $packingSubQty : 1;
   $ItemReorderLabel = !empty($ItemReorderLabel) ? $ItemReorderLabel : "NULL";
- $packingQty = !empty($packingQty) ? $packingQty : "NULL";
+ $packingQty = !empty($packingQty) ? $packingQty : 1;
 
 $sql_insert = "INSERT INTO ItemMaster(companyId, ItemName, SKU, HSN, Unit,CategoryId, Description) VALUES($companyId,
 '$ItemName','$ItemSKU','$ItemHSN','$ItemUnit',$ItemCategory,'$ItemDescription')";
@@ -95,9 +95,9 @@ if($method == "PUT")
   $PackingTypeId = !empty($PackingTypeId) ? $PackingTypeId : "NULL";
   $ItemTax = !empty($ItemTax) ? $ItemTax : "NULL";
   $SupplierId = !empty($SupplierId) ? $SupplierId : "NULL";
-  $packingSubQty = !empty($packingSubQty) ? $packingSubQty : "NULL";
+  $packingSubQty = !empty($packingSubQty) ? $packingSubQty : 1;
   $ItemReorderLabel = !empty($ItemReorderLabel) ? $ItemReorderLabel : "NULL";
-  $packingQty = !empty($packingQty) ? $packingQty : "NULL";
+  $packingQty = !empty($packingQty) ? $packingQty : 1;
 
   $sql_update = "UPDATE ItemMaster SET ItemName = '$ItemName',SKU = '$ItemSKU',HSN = '$ItemHSN',Unit = '$ItemUnit',
   CategoryId = $ItemCategory,Description = '$ItemDescription' WHERE ItemId = $ItemId";
