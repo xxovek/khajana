@@ -18,8 +18,14 @@ $("#schemes").on("submit",function(e){
             dataType:'json',
             data:{sId:sId,scheme:scheme,from:from,upto:upto,item:item,onpurchase:onpurchase,freeqty:freeqty},
             success:function(response){
-              alert(response.msg);
-              window.location.reload();
+              $('#goback').click();
+              app.toast(response.msg, {
+                actionTitle: 'Success',
+                // actionUrl: 'something',
+                actionColor: 'success',
+                duration: 4000
+              });
+             // window.location.reload();
             }
     });
 });

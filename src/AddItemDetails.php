@@ -6,7 +6,7 @@ $response = [];
 $method = $_SERVER['REQUEST_METHOD'];
 if($method == "POST")
 {
-  $ItemName     = $_POST['ItemName'];
+  $ItemName     = mysqli_real_escape_string($con,$_POST['ItemName']);
   $ItemSKU      = $_POST['ItemSKU'];
   $ItemHSN      = $_POST['ItemHSN'];
   $ItemUnit     = $_POST['ItemUnit'];
@@ -33,15 +33,15 @@ if($method == "POST")
   $packingSubQty = !empty($packingSubQty) ? $packingSubQty : 1;
   $ItemReorderLabel = !empty($ItemReorderLabel) ? $ItemReorderLabel : "NULL";
  $packingQty = !empty($packingQty) ? $packingQty : 1;
-
-$sql_insert = "INSERT INTO ItemMaster(companyId, ItemName, SKU, HSN, Unit,CategoryId, Description) VALUES($companyId,
+$totalQty =  $packingQty*$ItemQty;
+$sql_insert = "INSERT INTO ItemMaster(companyId, ItemName, SKU, HSN, Unit,CategoryId,Description) VALUES($companyId,
 '$ItemName','$ItemSKU','$ItemHSN','$ItemUnit',$ItemCategory,'$ItemDescription')";
 
 if(mysqli_query($con,$sql_insert) or die(mysqli_error($con))){
   $item_id = mysqli_insert_id($con);
 
-$sql_insert_details = "INSERT INTO ItemDetailMaster(ItemId,SizeId,PackingTypeId,PackingQty,Quantity,SubPacking,ReorderLabel) VALUES(
-  $item_id,$ItemSizeId,$PackingTypeId,$packingQty,$ItemQty,$packingSubQty,$ItemReorderLabel)";
+$sql_insert_details = "INSERT INTO ItemDetailMaster(ItemId,SizeId,PackingTypeId,PackingQty,Quantity,totalqty,SubPacking,ReorderLabel) VALUES(
+  $item_id,$ItemSizeId,$PackingTypeId,$packingQty,$ItemQty,$totalQty,$packingSubQty,$ItemReorderLabel)";
   // echo $sql_insert_details;
   if(mysqli_query($con,$sql_insert_details) or die(mysqli_error($con))){
     $itemDetailId = mysqli_insert_id($con);
@@ -65,7 +65,7 @@ if($method == "PUT")
   parse_str(file_get_contents("php://input"), $_PUT);
   $ItemId       = $_PUT['ItemId'];
   $ItemDetailId = $_PUT['ItemDetailId'];
-  $ItemName     = $_PUT['ItemName'];
+  $ItemName     = mysqli_real_escape_string($con,$_PUT['ItemName']);
   $ItemSKU      = $_PUT['ItemSKU'];
   $ItemHSN      = $_PUT['ItemHSN'];
   $ItemUnit     = $_PUT['ItemUnit'];
@@ -84,12 +84,6 @@ if($method == "PUT")
   $asondate        = date("Y-m-d");
   $SupplierId      = $_PUT['SupplierId'];
 
-  // $SupplierId = !empty($SupplierId) ? "'$SupplierId'" : "NULL";
-  // $ItemCategory = !empty($ItemCategory) ? "'$ItemCategory'" : "NULL";
-  // $ItemSizeId  = !empty($ItemSizeId) ? "'$ItemSizeId'" : "NULL";
-  // $PackingTypeId = !empty($PackingTypeId) ? "'$PackingTypeId'" : "NULL";
-  // $ItemTax = !empty($ItemTax) ? "'$ItemTax'" : "NULL";
-
   $ItemCategory = !empty($ItemCategory) ? $ItemCategory : "NULL";
   $ItemSizeId  = !empty($ItemSizeId) ? $ItemSizeId : "NULL";
   $PackingTypeId = !empty($PackingTypeId) ? $PackingTypeId : "NULL";
@@ -98,11 +92,11 @@ if($method == "PUT")
   $packingSubQty = !empty($packingSubQty) ? $packingSubQty : 1;
   $ItemReorderLabel = !empty($ItemReorderLabel) ? $ItemReorderLabel : "NULL";
   $packingQty = !empty($packingQty) ? $packingQty : 1;
-
+  $totalQty =  $packingQty*$ItemQty;
   $sql_update = "UPDATE ItemMaster SET ItemName = '$ItemName',SKU = '$ItemSKU',HSN = '$ItemHSN',Unit = '$ItemUnit',
   CategoryId = $ItemCategory,Description = '$ItemDescription' WHERE ItemId = $ItemId";
 
-  $sql_update_item = "UPDATE ItemDetailMaster SET SizeId = $ItemSizeId,PackingTypeId= $PackingTypeId,PackingQty=$packingQty,
+  $sql_update_item = "UPDATE ItemDetailMaster SET totalqty= $totalQty ,SizeId = $ItemSizeId,PackingTypeId= $PackingTypeId,PackingQty=$packingQty,
    SubPacking=$packingSubQty,Quantity = $ItemQty,ReorderLabel = $ItemReorderLabel WHERE ItemId = $ItemId";
 
   $sql_update_price = "UPDATE ItemPrice SET price = '$ItemPrice' WHERE ItemDetailId = $ItemDetailId";

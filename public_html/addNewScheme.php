@@ -47,13 +47,13 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="require">From Date</label>
-                                        <input type="text" class="form-control form-control-sm" id="fromDate" name="fromDate" data-placement="left" data-provide="datepicker" autocomplete="off" required>
+                                        <input type="date" class="form-control form-control-sm" id="fromDate" name="fromDate" data-placement="left"  autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="require">To Date</label>
-                                        <input type="text" class="form-control form-control-sm" id="toDate" name="toDate" data-placement="right" data-provide="datepicker" autocomplete="off" required>
+                                        <input type="date" class="form-control form-control-sm" id="toDate" name="toDate" data-placement="right"  autocomplete="off" required>
                                     </div>
                                 </div>
 
