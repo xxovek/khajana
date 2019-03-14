@@ -21,9 +21,9 @@ $result = mysqli_query($con,$sql) or die(mysqli_error($con));
      // $Qty = floor($Quantity/$row['OnPurchase']);
      // $offerQty =  $Qty*$row['freeQty'];
      // $BillQty = $Quantity-$offerQty;
-     $Billper = (($row['freeQty']*100)/$row['OnPurchase']);
+     $Billper = (($row['freeQty']*100)/($row['OnPurchase']+$row['freeQty']));
      $BillQty = $Quantity - (($Quantity*$Billper)/100);
-     $response['BillQty'] = $BillQty;
+     $response['BillQty'] = number_format($BillQty,2);
      // echo "IF".$response['BillQty'];
 }
 

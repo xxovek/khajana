@@ -25,6 +25,11 @@ $("#schemes").on("submit",function(e){
                 actionColor: 'success',
                 duration: 4000
               });
+              displaySchemes();
+              $("#scheme").val("");
+              $("#item").val("");
+              $("#onpurchase").val("");
+              $("#freeqty").val("");
              // window.location.reload();
             }
     });
@@ -33,6 +38,7 @@ $("#schemes").on("submit",function(e){
 // $("#schemeTable").hide();
 // $("#newschemes").show();
 // }
+
 
 function displaySchemes(){
   $('#tblData tbody').empty();
@@ -70,6 +76,9 @@ $.ajax({
   }
 });
 }
+
+
+
 function editSchemes(sId,sName,from,upto,Item,onpurchase,qty){
   $('#newSchemeBtn').click();
 // $("#schemeTable").hide();

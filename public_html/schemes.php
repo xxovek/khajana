@@ -113,7 +113,7 @@ if(isset($_SESSION['company_id']))
 
     </main>
     <div class="fab fab-fixed">
-      <a class="btn btn-float btn-primary" href="#qv-Taxes-addDiv" title="New Scheme" data-provide="tooltip" data-toggle="quickview" id="newSchemeBtn"><i class="ti-plus"></i></a>
+      <a class="btn btn-float btn-primary" href="#qv-Taxes-addDiv" title="New Scheme" data-provide="tooltip" data-toggle="quickview" id="newSchemeBtn" ><i class="ti-plus"></i></a>
     </div>
 
     <!-- Global quickview -->

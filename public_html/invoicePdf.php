@@ -147,37 +147,93 @@ function fetch_Items(){
   WHERE  TM.TransactionId =  $invoice_number";
   $response = [];
   $itemtable='';
-$i=0;
+
+  $i=0;
   if($result = mysqli_query($con,$sql)){
     if(mysqli_num_rows($result)>0){
+      $number = mysqli_num_rows($result);
+      $value = ceil($number/10);
       while($row = mysqli_fetch_array($result))
       {
-        $i++;
         $total=($row['BillQty']*$row['rate'])-(($row['BillQty']*$row['rate'])*(($row['discountAmount']/100)));
-<<<<<<< HEAD
-$itemtable.=' <tr>
-    <td style="width:10%;border:1px solid black;text-align:center;">'.($i).'</td>
-    <td style="width:40%;text-align:left; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
-    <td style="width:20%;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
-    <td style="width:20%;border:1px solid black;text-align:center;">'.$row['BillQty'].'</td>
-    <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'. $row['rate'].'</td>
-    <td style="width:20%;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
-      <td style="width:20%;border:1px solid black;text-align:center;">'.round($total,2).'</td>
-      <td style="width:20%;border:1px solid black;text-align:center;">'.$row['TaxPercent'].'% '.$row['TaxType'].'</td>
-=======
-      $itemtable.='<tr>
-    <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i).'</td>
-    <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'].'</td>
-    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['qty'].'</td>
-    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['BillQty'].'</td>
-    <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'. $row['rate'].'</td>
-    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['discountAmount'].'</td>
-    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.round($total,2).'</td>
-    <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$row['TaxPercent'].'% '.$row['TaxType'].'</td>
->>>>>>> f6b32b50e2e1d9f64193ca87e9e0fed073f89017
-</tr>';
-}
-}
+        array_push($response,[
+            'itemname' => $row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'],
+            'qty' => $row['qty'],
+            'billingqty' => $row['BillQty'],
+            'rate' => $row['rate'],
+            'discountAmount' =>$row['discountAmount'],
+            'Amount' => round($total,2),
+            'taxpercent' =>$row['TaxPercent'].'% '.$row['TaxType']
+            ]);
+    }
+    $count = count($response);
+    for($j=1;$j<=$value;$j++){
+      $k = $j-1;
+      $itemtable.='
+      <table width="100%" style="border:1px solid;" cellspacing="0" cellpadding="0">
+      <tr>
+      <td style="height:30px; border-bottom:1px solid;" valign="top">
+      <h1 style="text-align:center; font-weight:bolder; text-transform:uppercase; margin-top:3px; margin-bottom:3px;"><b>Tax Invoice      '.$j.'</b></h1>
+      </td>
+      </tr>
+      <tr>
+      <td style="height:60px;" valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0">
+    '.company_info().'
+      </td>
+      </tr>
+      </table>
+      </table>
+        <div id="content">
+          <div id="invoice_body"><br>
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr style="background:#fff;">
+                  <td style="width:10%;border:1px solid black;text-align:center;"><strong>Sr No.</strong></td>
+                  <td style="width:40%;border-bottom:1px solid black;border-top:1px solid black;text-align:left; padding-left:10px;">
+                  <strong>Description</strong></td>
+                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Shipping Quantity</strong></td>
+                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Billing Quantity</strong></td>
+                  <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Unit Cost</strong></td>
+                    <td style="width:20%;border:1px solid black;text-align:center;"><strong>Discount</strong></td>
+                    <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>
+                  <td style="width:20%;color: #000000;border:1px solid black;text-align:center;"><strong>Tax</strong></td>
+              </tr>';
+    for($i=($k*10);$i<($j*10);$i++){
+        // $itemtable.='<tr><td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>';
+       if($i<$count){
+        $itemtable.='<td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
+        <td style="width:40%;height:6%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$response[$i]['itemname'].'</td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['qty'].' </td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>
+        <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'.$response[$i]['rate'].'</td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['discountAmount'].'</td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['Amount'].'</td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['taxpercent'].'</td>
+        </tr>';
+         }
+        else {
+          $itemtable.='<tr>
+        <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
+        <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;"></td>
+        <td style="width:20%;height:6%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        </tr>';
+        }
+
+    }
+    $itemtable.='
+            </table>
+            <div>
+        </div>
+        <div style="page-break-after:always;"></div>
+        ';
+    }
+
+   }
 }
 return $itemtable;
 }
@@ -225,7 +281,7 @@ include '../config/connection.php';
 $response = [];
 $taxtable = '';
 $sql = "SELECT TD.TransactionId,TD.TaxType,TD.TaxPercent,TD.TaxPercent/2 AS IGST,SUM(TD.BillQty*TD.rate) AS Total_before_tax,
-((SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100)/2 AS Tax,SUM(TD.BillQty*TD.rate)+(SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100 AS Total_after_tax 
+((SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100)/2 AS Tax,SUM(TD.BillQty*TD.rate)+(SUM(TD.BillQty*TD.rate)*TD.TaxPercent)/100 AS Total_after_tax
 FROM TransactionDetails TD WHERE TD.TransactionId = $Tid GROUP BY TD.TaxPercent,TD.TransactionId";
 $result = mysqli_query($con,$sql);
 $subtotal = 0;
@@ -318,71 +374,42 @@ $html='<body >
         background-color: lightgray
     }
     footer {
-      position: fixed; 
-      bottom: -1px; 
-      left: 0px; 
+      position: fixed;
+      bottom: -1px;
+      left: 0px;
       right: 0px;
-      height: 30%; 
+      height: 30%;
       text-align: center;
       line-height: 20px;
   }
+
 </style>
 </style>
 	<div id="page-wrap" >
-<main>
-  <table width="100%" style="border:1px solid;" cellspacing="0" cellpadding="0">
-  <tr>
-  <td style="height:30px; border-bottom:1px solid;" valign="top">
-  <h1 style="text-align:center; font-weight:bolder; text-transform:uppercase; margin-top:3px; margin-bottom:3px;"><b>Tax Invoice</b></h1>
-  </td>
-  </tr>
-  <tr>
-  <td style="height:60px;" valign="top">
-
-  <table width="100%" cellspacing="0" cellpadding="0">
-'.company_info().'
-  </td>
-  </tr>
-  </table>
-  </table>
-    <div id="content">
-      <div id="invoice_body"><br>
-     
-        <table cellspacing="0" cellpadding="0" width="100%">
-          <tr style="background:#fff;">
-              <td style="width:10%;border:1px solid black;text-align:center;"><strong>Sr No.</strong></td>
-              <td style="width:40%;border-bottom:1px solid black;border-top:1px solid black;text-align:left; padding-left:10px;">
-              <strong>Description</strong></td>
-              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Shipping Quantity</strong></td>
-              <td style="width:20%;border:1px solid black;text-align:center;"><strong>Billing Quantity</strong></td>
-              <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Unit Cost</strong></td>
-                <td style="width:20%;border:1px solid black;text-align:center;"><strong>Discount</strong></td>
-                <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>
-              <td style="width:20%;color: #000000;border:1px solid black;text-align:center;"><strong>Tax</strong></td>
-          </tr>
-        '.fetch_Items().'
-        '.fetch_Items().'
-        '.fetch_Items().'
-        '.fetch_Items().'
-        '.fetch_Items().'
-          </table>
-          <p style="page-break-before: always;"></p>
-        </div>
-    </div>
-   
-    <br>
+    <main>
+   '.fetch_Items().'
     </main>
-    <footer>
-    <div id="content">
-    <table cellspacing="0" cellpadding="0" width="100%" style="float:right;margin-bottom:10px;border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;border-top:1px solid black;">
-  '.subtotal().'
-  </div>
-  </table>
-  </footer>
-  <h5>Notes</h5>
-  <p class="text-muted" id="notes">'.notes().'</p>
+    <table width="100%" style="border:1px solid;" cellspacing="0" cellpadding="0">
+    <tr>
+    <td style="height:30px; border-bottom:1px solid;" valign="top">
+    <h1 style="text-align:center; font-weight:bolder; text-transform:uppercase; margin-top:3px; margin-bottom:3px;"><b>Tax Details</b></h1>
+    </td>
+    </tr>
+    <tr>
+    <td style="height:60px;" valign="top">
+    <table width="100%" cellspacing="0" cellpadding="0">
+  '.company_info().'
+    </td>
+    </tr>
+    </table>
+    </table>
+    <h5>Notes</h5>
+         <p class="text-muted" id="notes">'.notes().'</p>
+         <table cellspacing="0" cellpadding="0" width="100%" >
+       '.subtotal().'
+         </table>
 	</div>
-  
+
 </body>';
 $dompdf->set_option('isHtml5ParserEnabled', true);
 $dompdf->setPaper('A4', 'portrait');
