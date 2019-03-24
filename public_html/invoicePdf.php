@@ -139,7 +139,7 @@ function fetch_Items(){
   $invoice_number = $_REQUEST['tid'];
   include '../config/connection.php';
 
-  $sql="SELECT IDM.ItemId,IM.ItemName,SM.SizeValue,IM.Unit,TD.rate, TD.itemDetailId,TD.qty,TD.BillQty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
+  $sql="SELECT IDM.ItemId,IM.ItemName,SM.SizeValue,IM.Unit,TD.rate, TD.itemDetailId,TD.itemunitval,TD.qty,TD.BillQty,TD.TaxType,TD.TaxPercent,TM.discount,IFNULL(TD.discountAmount,0) as discountAmount,TD.description,TM.TransactionId,TM.FinancialYear,TM.TransactionNumber,TM.DueDate,TM.DateCreated,TM.PersonId,TM.contactId
    FROM TransactionDetails TD LEFT JOIN TransactionMaster TM ON TM.TransactionId = TD.TransactionId
   LEFT JOIN ItemDetailMaster IDM ON IDM.itemDetailId = TD.itemDetailId
   LEFT JOIN ItemMaster IM ON IM.ItemId = IDM.ItemId
@@ -158,6 +158,7 @@ function fetch_Items(){
         $total=($row['BillQty']*$row['rate'])-(($row['BillQty']*$row['rate'])*(($row['discountAmount']/100)));
         array_push($response,[
             'itemname' => $row['ItemName'].' '.$row['SizeValue'].' '.$row['Unit'],
+            'itemunitval' => $row['itemunitval'],
             'qty' => $row['qty'],
             'billingqty' => $row['BillQty'],
             'rate' => $row['rate'],
@@ -192,20 +193,35 @@ function fetch_Items(){
                   <td style="width:10%;border:1px solid black;text-align:center;"><strong>Sr No.</strong></td>
                   <td style="width:40%;border-bottom:1px solid black;border-top:1px solid black;text-align:left; padding-left:10px;">
                   <strong>Description</strong></td>
-                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Shipping Quantity</strong></td>
-                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Billing Quantity</strong></td>
-                  <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Unit Cost</strong></td>
+                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Shipping Qty</strong></td>
+                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Billing Qty</strong></td>
+                  <td style="width:20%;border:1px solid black;text-align:center;"><strong>Unit</strong></td>
+                  <td style="width:20%;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"><strong>Rate</strong></td>
                     <td style="width:20%;border:1px solid black;text-align:center;"><strong>Discount</strong></td>
                     <td style="width:20%;border:1px solid black;text-align:center;"><strong>Amount</strong></td>
                   <td style="width:20%;color: #000000;border:1px solid black;text-align:center;"><strong>Tax</strong></td>
               </tr>';
     for($i=($k*10);$i<($j*10);$i++){
-        // $itemtable.='<tr><td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>';
        if($i<$count){
+        $valueunit = $response[$i]['itemunitval'];
+        switch ($valueunit) {
+          case 1:
+              $totalqty = 'Nos';
+              break;
+          case 2:
+              $totalqty = 'Packet';
+              break;
+          case 3:
+              $totalqty = 'Bag';
+              break;
+          default:
+              $totalqty = 'Nos';
+            }
         $itemtable.='<td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
         <td style="width:40%;height:4%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$response[$i]['itemname'].'</td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['qty'].' </td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>
+        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$totalqty.'</td>
         <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'.$response[$i]['rate'].'</td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['discountAmount'].'</td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['Amount'].'</td>
@@ -213,16 +229,35 @@ function fetch_Items(){
         </tr>';
          }
         else {
+
+        if($i % 10==9){
           $itemtable.='<tr>
-        <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
-        <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;"></td>
-        <td style="width:20%;height:4%;line-height: 20px;border:1px solid black;text-align:center;"></td>
-        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
-        <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"></td>
-        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
-        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
-        <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
-        </tr>';
+        <td style="width:10%;text-align:center;border-left:1px solid black;line-height: 20px;border-bottom:1px solid black;"></td>
+        <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-bottom:1px solid black;"></td>
+        <td style="width:20%;height:4%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;"></td>';
+        $itemtable.='<td style="width:20%;line-height: 20px;text-align:center;border-bottom:1px solid black;border-right:1px solid black"></td>';
+        $itemtable.='</tr>';
+        }
+        else{
+          $itemtable.='<tr>
+        <td style="width:10%;text-align:center;border-left:1px solid black;line-height: 20px;"></td>
+        <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;"></td>
+        <td style="width:20%;height:4%;line-height: 20px;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;"></td>
+          <td style="width:20%;line-height: 20px;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;"></td>
+        <td style="width:20%;line-height: 20px;text-align:center;"></td>';
+          $itemtable.='<td style="width:20%;line-height: 20px;text-align:center;border-right:1px solid black;"></td>';
+            $itemtable.='</tr>';
+        }
+
+
         }
 
     }
@@ -232,6 +267,7 @@ function fetch_Items(){
             <div>
         </div>';
     if($tempcount>10){
+    $itemtable.='<div style="float:right"><h5 style="padding-top:75px;padding-left:78%;float:right">continue to next page...</h5></div>';
     $itemtable.='<div style="page-break-after:always;"></div>';
     }
     $tempcount = $tempcount-10;

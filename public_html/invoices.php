@@ -275,6 +275,7 @@ if(isset($_SESSION['company_id']))
   </body>
 
       <script>
+
       $('#modal-invoice').on('show.bs.modal', function(e) {
          var formid = $(e.relatedTarget).data('formid');
          var formtype = $(e.relatedTarget).data('formtype');
@@ -305,6 +306,7 @@ if(isset($_SESSION['company_id']))
               {
               editappenditemtable(transactionid);
               },500);
+
             }
          }
 
