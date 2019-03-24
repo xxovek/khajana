@@ -42,7 +42,7 @@ function company_info()
     <td style="height:25px;"><strong>'.ucwords($row['companyName']).'.</strong></td>
     </tr>
     <tr>
-    <td style="height:25px;">'.$row['contactAddress'].'<br>'.$row['country'].',' .$row['CState'].','.$row['city'].','.$row['zipcode'].'<br>'.$row['contactNumber'].'</td>
+    <td style="height:25px;">'.$row['contactAddress'].'<br>'.$row['country'].',' .$row['CState'].','.$row['city'].','.$row['zipcode'].'<br>'.$row['contactNumber'].'<br>GSTIN:27BTNPC3346N1ZA</td>
     </tr>
 
     </table>
@@ -167,6 +167,7 @@ function fetch_Items(){
             ]);
     }
     $count = count($response);
+    $tempcount = $count;
     for($j=1;$j<=$value;$j++){
       $k = $j-1;
       $itemtable.='
@@ -202,7 +203,7 @@ function fetch_Items(){
         // $itemtable.='<tr><td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>';
        if($i<$count){
         $itemtable.='<td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
-        <td style="width:40%;height:6%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$response[$i]['itemname'].'</td>
+        <td style="width:40%;height:4%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;">'.$response[$i]['itemname'].'</td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['qty'].' </td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;">'.$response[$i]['billingqty'].'</td>
         <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;">'.$response[$i]['rate'].'</td>
@@ -215,7 +216,7 @@ function fetch_Items(){
           $itemtable.='<tr>
         <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">'.($i+1).'</td>
         <td style="width:40%;text-align:left;line-height: 20px; padding-left:10px;border-top:1px solid black;border-bottom:1px solid black;text-align:le;"></td>
-        <td style="width:20%;height:6%;line-height: 20px;border:1px solid black;text-align:center;"></td>
+        <td style="width:20%;height:4%;line-height: 20px;border:1px solid black;text-align:center;"></td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
         <td style="width:20%;line-height: 20px;border-top:1px solid black;border-bottom:1px solid black;text-align:center;"></td>
         <td style="width:20%;line-height: 20px;border:1px solid black;text-align:center;"></td>
@@ -225,12 +226,15 @@ function fetch_Items(){
         }
 
     }
+
     $itemtable.='
             </table>
             <div>
-        </div>
-        <div style="page-break-after:always;"></div>
-        ';
+        </div>';
+    if($tempcount>10){
+    $itemtable.='<div style="page-break-after:always;"></div>';
+    }
+    $tempcount = $tempcount-10;
     }
 
    }
@@ -294,7 +298,7 @@ if(mysqli_num_rows($result)>0){
       'GST' => $row['IGST'],
       'Total_before_tax' => $row['Total_before_tax'],
       'Tax' => $row['Tax'],
-      'FinalTotal' => number_format($finalTotal,2)
+      'FinalTotal' => $finalTotal
     ]);
   }
 }
@@ -352,7 +356,7 @@ $total = (int)$response[$count-1]['FinalTotal'];
        <strong>GRAND TOTAL</strong>
       </td>
       <td style="width:10%;border:1px solid black;text-align:center;line-height: 20px;">
-       <strong>'.round($finaltotal,2).'</strong>
+       <strong>'.number_format(round($finaltotal,2),2).'</strong>
       </td>
   </tr>';
 return $taxtable;
@@ -389,21 +393,8 @@ $html='<body >
     <main>
    '.fetch_Items().'
     </main>
-    <table width="100%" style="border:1px solid;" cellspacing="0" cellpadding="0">
-    <tr>
-    <td style="height:30px; border-bottom:1px solid;" valign="top">
-    <h1 style="text-align:center; font-weight:bolder; text-transform:uppercase; margin-top:3px; margin-bottom:3px;"><b>Tax Details</b></h1>
-    </td>
-    </tr>
-    <tr>
-    <td style="height:60px;" valign="top">
-    <table width="100%" cellspacing="0" cellpadding="0">
-  '.company_info().'
-    </td>
-    </tr>
-    </table>
-    </table>
-    <h5>Notes</h5>
+
+    <h5 style="padding-top:5px;">Notes</h5>
          <p class="text-muted" id="notes">'.notes().'</p>
          <table cellspacing="0" cellpadding="0" width="100%" >
        '.subtotal().'
